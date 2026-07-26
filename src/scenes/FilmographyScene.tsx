@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import { Cue } from '@/components/Cue';
+import { GhostGlyph } from '@/components/GhostGlyph';
 import { MetaRow } from '@/components/MetaRow';
-import { SealStamp } from '@/components/SealStamp';
-import { Slate } from '@/components/Slate';
+import { PageNo } from '@/components/PageNo';
 import { SOLID } from '@/components/solid';
 import { Project } from '@/data/types';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { LayoutVariant } from '@/hooks/useDesignSize';
-
-const ZH_NUMERALS = ['壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖', '拾'];
-const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
 
 interface FilmographySceneProps {
   projects: Project[];
@@ -18,8 +15,8 @@ interface FilmographySceneProps {
 }
 
 /**
- * 排片表:作品集主幕。center-lock 截流滚动,片单逐行升起;
- * 演完释放后,悬停片名高亮并在右侧亮出场刊(描述/元数据/链接),点击进场。
+ * 个人作品:center-lock 截流滚动,列表逐行展开(朱红扫光条随进度掠过);
+ * 释放后移入任意行高亮 + 右侧展开详情,点击进入仓库。
  */
 export function FilmographyScene({ projects, variant, reduced }: FilmographySceneProps) {
   const { language, t } = useLanguage();
@@ -33,12 +30,13 @@ export function FilmographyScene({ projects, variant, reduced }: FilmographyScen
   return (
     <div className="poster" data-variant={variant}>
       <div className="poster-frame" />
-      <Slate text={t('filmoSlate')} />
+      <GhostGlyph char="作" style={{ left: '2%', bottom: '4%' }} />
+      <PageNo index={2} />
       <div className="filmo-layout">
-        <Cue off={reduced} animateId="filmo-head" enterAnimation="slide-up" duration={{ enter: 500 }}>
+        <Cue off={reduced} animateId="filmo-head" enterAnimation="slide-up" duration={{ enter: 380 }}>
           <header className="filmo-head">
-            <h2 className="display filmo-title-main">{t('filmoTitle')}</h2>
-            <p className="filmo-sub mono">{t('filmoSub')}</p>
+            <h2 className="display filmo-title-main">{t('worksTitle')}</h2>
+            <p className="filmo-sub mono">{t('worksSub')}</p>
           </header>
         </Cue>
 
@@ -50,18 +48,28 @@ export function FilmographyScene({ projects, variant, reduced }: FilmographyScen
                 off={reduced}
                 animateId={`filmo-row-${i}`}
                 enterAnimation={SOLID}
-                duration={{ enter: 480 }}
-                timeline={i === 0 ? { waitFor: 'filmo-head', delay: 120 } : { waitFor: `filmo-row-${i - 1}`, delay: 80 }}
+                duration={{ enter: 340 }}
+                timeline={i === 0 ? { waitFor: 'filmo-head', delay: 80 } : { waitFor: `filmo-row-${i - 1}`, delay: 60 }}
               >
                 {({ enterProgress }) => (
                   <li
                     className="filmo-item"
                     style={{
                       clipPath: `inset(0 ${(1 - enterProgress) * 100}% 0 0)`,
-                      transform: `translateY(${(1 - enterProgress) * 22}px)`,
+                      transform: `translateY(${(1 - enterProgress) * 20}px)`,
                       opacity: 0.2 + 0.8 * enterProgress,
                     }}
                   >
+                    {/* 扫光条:随展开进度掠过整行,落定后隐去 */}
+                    <span
+                      className="filmo-sweep"
+                      style={{
+                        transform: `scaleX(${enterProgress})`,
+                        opacity: Math.sin(Math.min(1, enterProgress) * Math.PI),
+                        background: p.accent ?? 'var(--seal)',
+                      }}
+                      aria-hidden="true"
+                    />
                     <a
                       className="filmo-row"
                       href={p.htmlUrl}
@@ -71,7 +79,7 @@ export function FilmographyScene({ projects, variant, reduced }: FilmographyScen
                       onMouseEnter={() => setHovered(i)}
                       onFocus={() => setHovered(i)}
                     >
-                      <span className="filmo-no mono">{zh ? `第${ZH_NUMERALS[i] ?? i + 1}幕` : `ACT ${ROMAN[i] ?? i + 1}`}</span>
+                      <span className="filmo-no mono">{String(i + 1).padStart(2, '0')}</span>
                       <span className="filmo-names">
                         <span className="display filmo-name">{rowTitle(p)}</span>
                         <span className="filmo-latin mono">{p.name}</span>
@@ -93,14 +101,17 @@ export function FilmographyScene({ projects, variant, reduced }: FilmographyScen
           </ul>
 
           {variant === 'desktop' && (
-            <aside
-              className="filmo-panel"
-              onMouseEnter={() => hovered !== null && setHovered(hovered)}
-            >
+            <aside className="filmo-panel">
               {active ? (
-                <div className="filmo-card" key={active.name}>
-                  <SealStamp accent={active.accent} size={110} />
-                  <h3 className="display filmo-card-title">{rowTitle(active)}</h3>
+                <div
+                  className="filmo-card"
+                  key={active.name}
+                  style={{ ['--row-accent' as string]: active.accent ?? 'var(--seal)' }}
+                >
+                  <div className="filmo-card-head">
+                    <h3 className="display filmo-card-title">{rowTitle(active)}</h3>
+                    <p className="filmo-card-latin mono">{active.name}</p>
+                  </div>
                   {rowDesc(active) && <p className="filmo-card-desc">{rowDesc(active)}</p>}
                   <MetaRow project={active} />
                   <div className="filmo-card-links">
@@ -126,23 +137,12 @@ export function FilmographyScene({ projects, variant, reduced }: FilmographyScen
                 </div>
               ) : (
                 <div className="filmo-card filmo-card-idle">
-                  <SealStamp accent="#C9C4B8" size={110} />
-                  <p className="filmo-idle-text">{t('filmoIdle')}</p>
+                  <p className="filmo-idle-text">{t('worksIdle')}</p>
                 </div>
               )}
             </aside>
           )}
         </div>
-
-        <Cue
-          off={reduced}
-          animateId="filmo-hint"
-          enterAnimation="fade-in"
-          duration={{ enter: 400 }}
-          timeline={{ waitFor: `filmo-row-${projects.length - 1}`, delay: 150 }}
-        >
-          <p className="filmo-hint mono">{t('filmoHint')}</p>
-        </Cue>
       </div>
     </div>
   );

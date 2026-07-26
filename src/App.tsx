@@ -2,10 +2,9 @@ import { CineView, Scene } from 'cineview';
 import type { CineViewErrorDetail } from 'cineview';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { HeroScene } from '@/scenes/HeroScene';
-import { PrologueScene } from '@/scenes/PrologueScene';
 import { FilmographyScene } from '@/scenes/FilmographyScene';
-import { BackstageScene } from '@/scenes/BackstageScene';
-import { CreditsScene } from '@/scenes/CreditsScene';
+import { SiteScene } from '@/scenes/SiteScene';
+import { ContactScene } from '@/scenes/ContactScene';
 import { useDesignSize } from '@/hooks/useDesignSize';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import projectsData from '@/data/projects.json';
@@ -43,32 +42,21 @@ export default function App() {
           <HeroScene variant={variant} reduced={reduced} />
         </Scene>
 
+        {/* 滚动截流只给作品列表:逐行展开演完才放行 */}
         <Scene
-          sceneId="prologue"
+          sceneId="works"
           layout={{ width: '100%', height: '100vh' }}
-          scroll={{ zoneId: 'prologue-zone', trigger: 'center-lock' }}
-        >
-          <PrologueScene variant={variant} reduced={reduced} />
-        </Scene>
-
-        <Scene
-          sceneId="filmography"
-          layout={{ width: '100%', height: '100vh' }}
-          scroll={{ zoneId: 'filmography-zone', trigger: 'center-lock' }}
+          scroll={{ zoneId: 'works-zone', trigger: 'center-lock' }}
         >
           <FilmographyScene projects={projects} variant={variant} reduced={reduced} />
         </Scene>
 
-        <Scene
-          sceneId="backstage"
-          layout={{ width: '100%', height: '100vh' }}
-          scroll={{ zoneId: 'backstage-zone', trigger: 'center-lock' }}
-        >
-          <BackstageScene variant={variant} reduced={reduced} />
+        <Scene sceneId="site" layout={{ width: '100%', height: '100vh' }}>
+          <SiteScene variant={variant} reduced={reduced} />
         </Scene>
 
-        <Scene sceneId="credits" layout={{ width: '100%', height: '100vh' }}>
-          <CreditsScene variant={variant} reduced={reduced} />
+        <Scene sceneId="contact" layout={{ width: '100%', height: '100vh' }}>
+          <ContactScene variant={variant} reduced={reduced} />
         </Scene>
       </CineView>
     </>
