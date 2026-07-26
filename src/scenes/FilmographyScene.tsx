@@ -120,6 +120,8 @@ export function FilmographyScene({ projects, variant, reduced }: FilmographyScen
                       className="filmo-row"
                       data-active={activeIdx === i}
                       style={{ ['--row-accent' as string]: p.accent ?? 'var(--seal)' }}
+                      onMouseEnter={() => revealDone && setSelected(i)}
+                      onFocus={() => revealDone && setSelected(i)}
                       onClick={() => revealDone && setSelected(i)}
                     >
                       <span className="filmo-no mono">{String(i + 1).padStart(2, '0')}</span>
