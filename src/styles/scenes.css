@@ -153,11 +153,40 @@
   /* 关键:宽度必须是内容宽(两段等宽拷贝),translateX(-50%) 才恰好
      等于一段的宽度,循环无缝;否则按容器宽平移会产生跳变断流 */
   width: max-content;
-  white-space: nowrap;
-  animation: marquee 30s linear infinite;
-  font-size: max(calc(var(--u) * 12), 11px);
-  letter-spacing: 0.26em;
-  color: var(--slate);
+  animation: marquee 36s linear infinite;
+}
+
+.mq-half {
+  display: flex;
+  align-items: center;
+}
+
+.mq-unit {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 16);
+  padding-right: calc(var(--u) * 16);
+}
+
+.mq-square {
+  width: calc(var(--u) * 7);
+  height: calc(var(--u) * 7);
+  background: var(--seal);
+  transform: rotate(45deg);
+}
+
+.mq-line {
+  width: calc(var(--u) * 30);
+  height: 1px;
+  background: var(--hairline);
+}
+
+.mq-dot {
+  width: calc(var(--u) * 4);
+  height: calc(var(--u) * 4);
+  border-radius: 50%;
+  background: var(--slate);
+  opacity: 0.7;
 }
 
 @keyframes marquee {

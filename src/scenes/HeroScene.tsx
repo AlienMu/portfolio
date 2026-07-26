@@ -115,10 +115,21 @@ export function HeroScene({ variant, reduced }: HeroSceneProps) {
           </div>
         </Cue>
       </div>
+      {/* 纹样带:方/线/点循环的装饰元素,替代文字跑马灯 */}
       <div className="hero-marquee" aria-hidden="true">
-        <div className="marquee-track mono">
-          <span>{t('marquee').repeat(4)}</span>
-          <span>{t('marquee').repeat(4)}</span>
+        <div className="marquee-track">
+          {[0, 1].map((half) => (
+            <div className="mq-half" key={half}>
+              {Array.from({ length: 18 }, (_, i) => (
+                <span className="mq-unit" key={i}>
+                  <span className="mq-square" />
+                  <span className="mq-line" />
+                  <span className="mq-dot" />
+                  <span className="mq-line" />
+                </span>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
       <div className="hero-hint mono">{t('scrollHint')} ↓</div>
