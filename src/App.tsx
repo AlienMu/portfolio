@@ -1,6 +1,7 @@
 import { CineView, Scene } from 'cineview';
 import type { CineViewErrorDetail } from 'cineview';
 import { LanguageToggle } from '@/components/LanguageToggle';
+import { ScrollChromaticBackground } from '@/components/ScrollChromaticBackground';
 import { HeroScene } from '@/scenes/HeroScene';
 import { InterestsScene } from '@/scenes/InterestsScene';
 import { FilmographyScene } from '@/scenes/FilmographyScene';
@@ -24,6 +25,7 @@ export default function App() {
 
   return (
     <>
+      <ScrollChromaticBackground variant={variant} reduced={reduced} />
       <LanguageToggle />
       <CineView
         key={variant} // 跨断点重挂载换设计尺(1440/750)

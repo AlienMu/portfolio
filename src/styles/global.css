@@ -52,10 +52,33 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* CineView 滚动根把背景写死为内联 #ffffff(DirectScrollCineView),
-   用 !important 覆盖为纸色。升级 cineview 后需复查此 hack 是否仍生效。 */
+/* CineView 滚动根把背景写死为内联 #ffffff(DirectScrollCineView)。
+   设为透明以露出下方的滚动调色纸层。升级 cineview 后需复查此覆盖。 */
 [data-cineview-container='true'] {
-  background: var(--paper) !important;
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
+}
+
+/* 全站滚动调色纸层:渐变结构固定，仅随滚动进度连续插值五个色标。 */
+.scroll-chromatic-background {
+  --chromatic-start: rgb(250 248 243);
+  --chromatic-quarter: rgb(244 240 231);
+  --chromatic-middle: rgb(239 235 225);
+  --chromatic-three-quarter: rgb(246 239 232);
+  --chromatic-end: rgb(249 246 239);
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    var(--chromatic-start) 0%,
+    var(--chromatic-quarter) 23%,
+    var(--chromatic-middle) 50%,
+    var(--chromatic-three-quarter) 76%,
+    var(--chromatic-end) 100%
+  );
 }
 
 /* 纸纹质感:整页一层极淡的噪点,像海报纸 */

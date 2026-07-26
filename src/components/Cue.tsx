@@ -10,9 +10,12 @@ type CueProps = AnimateProps & {
 };
 
 /**
- * Animate 的 reduced-motion 包装:off 时不挂动画,render-prop 拿到已完成态。
+ * Animate 的站内统一包装:
+ * - off(reduced-motion)时不挂动画,render-prop 拿到已完成态
+ * - 默认开启 replayOnReenter；提供 exitAnimation 的元素离场后再次进入会重播
+ *   (zone 接管的元素不受此项影响,反向滚动天然反向擦洗)
  */
-export function Cue({ off, ...animateProps }: CueProps) {
+export function Cue({ off, visibility, ...animateProps }: CueProps) {
   if (off) {
     const { children } = animateProps;
     if (typeof children === 'function') {
@@ -20,5 +23,10 @@ export function Cue({ off, ...animateProps }: CueProps) {
     }
     return <>{children as ReactNode}</>;
   }
-  return <Animate {...(animateProps as AnimateProps)} />;
+  return (
+    <Animate
+      visibility={{ replayOnReenter: true, ...visibility }}
+      {...(animateProps as AnimateProps)}
+    />
+  );
 }

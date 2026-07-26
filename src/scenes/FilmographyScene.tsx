@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Cue } from '@/components/Cue';
 import { GhostGlyph } from '@/components/GhostGlyph';
 import { MetaRow } from '@/components/MetaRow';
@@ -19,28 +19,26 @@ function RevealSync({
   index,
   progress,
   isLast,
-  onActive,
-  onRetreat,
+  onThresholdChange,
   onDone,
 }: {
   index: number;
   progress: number;
   isLast: boolean;
-  onActive: (i: number) => void;
-  onRetreat: (i: number) => void;
+  onThresholdChange: (index: number, entered: boolean) => void;
   onDone: (done: boolean) => void;
 }) {
   const entered = progress > 0.15;
   const done = progress >= 0.99;
+
   useEffect(() => {
-    if (entered) onActive(index);
-    else onRetreat(index);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [entered]);
+    onThresholdChange(index, entered);
+  }, [entered, index, onThresholdChange]);
+
   useEffect(() => {
     if (isLast) onDone(done);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [done, isLast]);
+  }, [done, isLast, onDone]);
+
   return null;
 }
 
@@ -54,6 +52,32 @@ export function FilmographyScene({ projects, variant, reduced }: FilmographyScen
   const zh = language === 'zh';
   const [selected, setSelected] = useState<number | null>(reduced ? 0 : null);
   const [revealDone, setRevealDone] = useState(reduced);
+  const revealedRowsRef = useRef<Set<number>>(new Set());
+
+  const selectLatestRevealed = useCallback(() => {
+    const latest =
+      revealedRowsRef.current.size > 0 ? Math.max(...revealedRowsRef.current) : null;
+    setSelected(latest);
+  }, []);
+
+  const handleThresholdChange = useCallback(
+    (index: number, entered: boolean) => {
+      if (entered) revealedRowsRef.current.add(index);
+      else revealedRowsRef.current.delete(index);
+      selectLatestRevealed();
+    },
+    [selectLatestRevealed]
+  );
+
+  const handleRevealDone = useCallback(
+    (done: boolean) => {
+      setRevealDone(done);
+      // Leaving the completed state hands selection back to the reversible zone
+      // timeline, replacing any hover/click choice with the latest visible row.
+      if (!done) selectLatestRevealed();
+    },
+    [selectLatestRevealed]
+  );
 
   const activeIdx = selected;
   const active = activeIdx === null ? null : projects[activeIdx];
@@ -93,16 +117,13 @@ export function FilmographyScene({ projects, variant, reduced }: FilmographyScen
                       opacity: 0.2 + 0.8 * enterProgress,
                     }}
                   >
-                    {!reduced && !revealDone && (
+                    {!reduced && (
                       <RevealSync
                         index={i}
                         progress={enterProgress}
                         isLast={i === projects.length - 1}
-                        onActive={(idx) => setSelected((cur) => (cur === null || idx > cur ? idx : cur))}
-                        onRetreat={(idx) =>
-                          setSelected((cur) => (cur === idx ? (idx > 0 ? idx - 1 : null) : cur))
-                        }
-                        onDone={setRevealDone}
+                        onThresholdChange={handleThresholdChange}
+                        onDone={handleRevealDone}
                       />
                     )}
                     {/* 扫光条:随展开进度掠过整行,落定后隐去 */}

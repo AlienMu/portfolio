@@ -38,7 +38,13 @@ export function HeroScene({ variant, reduced }: HeroSceneProps) {
         <div className="hero-main">
           {/* 单个 Animate 包整行(块级宿主不能逐字塞进 h1),
               用同一 enterProgress 分摊每个字的局部进度做级联揭示 */}
-          <Cue off={reduced} animateId="hero-greeting" enterAnimation={SOLID} duration={{ enter: 900 }}>
+          <Cue
+            off={reduced}
+            animateId="hero-greeting"
+            enterAnimation={SOLID}
+            exitAnimation="fade-out"
+            duration={{ enter: 900 }}
+          >
             {({ enterProgress }) => (
               <h1 className="display hero-greeting" aria-label={t('greeting')}>
                 {tokens.map((tok, i) => {
@@ -60,49 +66,87 @@ export function HeroScene({ variant, reduced }: HeroSceneProps) {
               </h1>
             )}
           </Cue>
+          {/* 副标题:从左到右擦入 + 轻微横移 */}
           <Cue
             off={reduced}
             animateId="hero-sub"
-            enterAnimation="slide-up"
-            duration={{ enter: 420 }}
+            exitAnimation="fade-out"
+            enterAnimation={SOLID}
+            duration={{ enter: 480 }}
             timeline={{ waitFor: 'hero-greeting', delay: 50 }}
           >
-            <p className="hero-sub">{t('heroSub')}</p>
+            {({ enterProgress }) => (
+              <p
+                className="hero-sub"
+                style={{
+                  clipPath: `inset(0 ${(1 - enterProgress) * 100}% 0 0)`,
+                  transform: `translateX(${(1 - enterProgress) * 12}px)`,
+                }}
+              >
+                {t('heroSub')}
+              </p>
+            )}
           </Cue>
+          {/* 职位字幕:字距从松到紧收拢入场 */}
           <Cue
             off={reduced}
+            exitAnimation="fade-out"
             animateId="hero-role"
-            enterAnimation="fade-in"
-            duration={{ enter: 400 }}
+            enterAnimation={SOLID}
+            duration={{ enter: 450 }}
             timeline={{ waitFor: 'hero-sub', delay: 50 }}
           >
-            <p className="hero-role mono">{t('role')}</p>
+            {({ enterProgress }) => (
+              <p
+                className="hero-role mono"
+                style={{
+                  opacity: enterProgress,
+                  letterSpacing: `${0.3 + 0.35 * (1 - enterProgress)}em`,
+                }}
+              >
+                {t('role')}
+              </p>
+            )}
           </Cue>
+          {/* 入口按钮:each 级联,逐个裁切揭示 + 位移 + 微旋转落位 */}
           <Cue
             off={reduced}
+            exitAnimation="fade-out"
             animateId="hero-socials"
-            enterAnimation="slide-up"
-            duration={{ enter: 420 }}
+            enterAnimation={SOLID}
+            duration={{ enter: 750 }}
             timeline={{ waitFor: 'hero-role', delay: 60 }}
           >
-            <div className="hero-socials">
-              {SOCIALS.map((s) => (
-                <a
-                  key={s.label}
-                  className="film-link"
-                  href={s.href}
-                  target={s.href.startsWith('mailto:') ? undefined : '_blank'}
-                  rel="noreferrer"
-                >
-                  {s.label}
-                </a>
-              ))}
-            </div>
+            {({ enterProgress }) => (
+              <div className="hero-socials">
+                {SOCIALS.map((s, i) => {
+                  const step = 0.6 / Math.max(1, SOCIALS.length - 1);
+                  const p = Math.min(1, Math.max(0, (enterProgress - i * step) / 0.4));
+                  return (
+                    <a
+                      key={s.label}
+                      className="film-link"
+                      href={s.href}
+                      target={s.href.startsWith('mailto:') ? undefined : '_blank'}
+                      rel="noreferrer"
+                      style={{
+                        clipPath: `inset(0 ${(1 - p) * 100}% 0 0)`,
+                        transform: `translateY(${(1 - p) * 14}px) rotate(${(1 - p) * -3}deg)`,
+                        opacity: 0.15 + 0.85 * p,
+                      }}
+                    >
+                      {s.label}
+                    </a>
+                  );
+                })}
+              </div>
+            )}
           </Cue>
         </div>
         <Cue
           off={reduced}
           animateId="hero-avatar"
+          exitAnimation="fade-out"
           enterAnimation={{
             initial: { opacity: 0, y: 26, rotate: -7 },
             animate: { opacity: 1, y: 0, rotate: -2 },
@@ -115,24 +159,6 @@ export function HeroScene({ variant, reduced }: HeroSceneProps) {
           </div>
         </Cue>
       </div>
-      {/* 纹样带:方/线/点循环的装饰元素,替代文字跑马灯 */}
-      <div className="hero-marquee" aria-hidden="true">
-        <div className="marquee-track">
-          {[0, 1].map((half) => (
-            <div className="mq-half" key={half}>
-              {Array.from({ length: 18 }, (_, i) => (
-                <span className="mq-unit" key={i}>
-                  <span className="mq-square" />
-                  <span className="mq-line" />
-                  <span className="mq-dot" />
-                  <span className="mq-line" />
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="hero-hint mono">{t('scrollHint')} ↓</div>
     </div>
   );
 }
