@@ -1,22 +1,22 @@
 import { Cue } from '@/components/Cue';
 import { SealStamp } from '@/components/SealStamp';
+import { Slate } from '@/components/Slate';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { LayoutVariant } from '@/hooks/useDesignSize';
-
-const SKILLS = 'React · TypeScript · Vue · Node.js · Vite · Motion';
 
 interface HeroSceneProps {
   variant: LayoutVariant;
   reduced: boolean;
 }
 
-/** 第一幕:片名海报。竖排"作品集"大字 + 落款印,无滚动接管,入场即成。 */
+/** 第零场:片名海报。竖排大字 + 落款印 + 上映条 + 底部致密 billing block。 */
 export function HeroScene({ variant, reduced }: HeroSceneProps) {
   const { language, t } = useLanguage();
 
   return (
     <div className="poster" data-variant={variant}>
       <div className="poster-frame" />
+      <Slate text={t('heroSlate')} />
       <div className="hero-layout">
         <Cue off={reduced} animateId="hero-title" enterAnimation="fade-in" duration={{ enter: 700 }}>
           {language === 'zh' ? (
@@ -35,6 +35,7 @@ export function HeroScene({ variant, reduced }: HeroSceneProps) {
           <div className="hero-seal-block">
             <SealStamp size={variant === 'mobile' ? 104 : 72} />
             <p className="hero-byline mono">{t('byline')}</p>
+            <p className="hero-now mono">{t('nowShowing')}</p>
           </div>
         </Cue>
         <Cue
@@ -44,16 +45,16 @@ export function HeroScene({ variant, reduced }: HeroSceneProps) {
           duration={{ enter: 600 }}
           timeline={{ waitFor: 'hero-seal', delay: 100 }}
         >
-          <p className="hero-intro">{t('heroIntro')}</p>
+          <p className="hero-intro">{t('tagline')}</p>
         </Cue>
         <Cue
           off={reduced}
-          animateId="hero-skills"
+          animateId="hero-billing"
           enterAnimation="fade-in"
-          duration={{ enter: 500 }}
+          duration={{ enter: 600 }}
           timeline={{ waitFor: 'hero-intro', delay: 80 }}
         >
-          <p className="hero-skills mono">{SKILLS}</p>
+          <p className="hero-billing mono">{t('billing')}</p>
         </Cue>
       </div>
       <div className="hero-hint">{t('scrollHint')} ↓</div>

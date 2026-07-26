@@ -1,5 +1,6 @@
 import { Cue } from '@/components/Cue';
 import { SealStamp } from '@/components/SealStamp';
+import { Slate } from '@/components/Slate';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { LayoutVariant } from '@/hooks/useDesignSize';
 
@@ -14,13 +15,14 @@ interface CreditsSceneProps {
   reduced: boolean;
 }
 
-/** 终幕:落款/字幕表。联系方式 + 总印章 + 剧终。 */
+/** 终幕:职员表 + 落款。导演/编剧/主演都是同一个人——独立制片的浪漫。 */
 export function CreditsScene({ variant, reduced }: CreditsSceneProps) {
-  const { language, t } = useLanguage();
+  const { t, tList } = useLanguage();
 
   return (
     <div className="poster" data-variant={variant}>
       <div className="poster-frame" />
+      <Slate text={t('creditsSlate')} />
       {/* 居中容器在 Cue 外:动画宿主只包内容块,让它远离视口顶边,
           否则滚到绝对底部时内容顶边落进 exitMargin 闸门被判退场而隐藏 */}
       <div className="credits-layout">
@@ -33,6 +35,13 @@ export function CreditsScene({ variant, reduced }: CreditsSceneProps) {
         >
           <div className="credits-inner">
             <h2 className="credits-title">{t('creditsTitle')}</h2>
+            <div className="credits-roles">
+              {tList('creditsRoles').map((role) => (
+                <p className="credits-role mono" key={role}>
+                  {role}
+                </p>
+              ))}
+            </div>
             <div className="credits-rows">
               {CONTACTS.map((c) => (
                 <div className="credits-row" key={c.key}>
@@ -52,7 +61,7 @@ export function CreditsScene({ variant, reduced }: CreditsSceneProps) {
                 github.com/AlienMu/cineView
               </a>
             </p>
-            <p className="credits-fin">{language === 'zh' ? '剧终' : 'FIN'}</p>
+            <p className="credits-fin">{t('finale')}</p>
           </div>
         </Cue>
       </div>

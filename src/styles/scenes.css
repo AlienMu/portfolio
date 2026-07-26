@@ -1,7 +1,24 @@
 /* ============================================================
-   幕次样式:Hero / Project / Credits
+   幕次样式:Hero / 序 / 排片表 / 幕后 / 落款
    所有长度用 --u(CineView 设计 px 标尺):桌面稿 1440,移动稿 750
    ============================================================ */
+
+/* 场记条:每幕右下角拍摄板小字 */
+.poster-slate {
+  position: absolute;
+  right: calc(var(--u) * 54);
+  bottom: calc(var(--u) * 52);
+  font-size: calc(var(--u) * 12);
+  letter-spacing: 0.3em;
+  color: var(--slate);
+  opacity: 0.75;
+}
+
+[data-variant='mobile'] .poster-slate {
+  font-size: calc(var(--u) * 18);
+  right: calc(var(--u) * 60);
+  bottom: calc(var(--u) * 58);
+}
 
 /* ---------- Hero:片名海报 ---------- */
 .hero-layout {
@@ -38,7 +55,7 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  gap: calc(var(--u) * 18);
+  gap: calc(var(--u) * 16);
   align-items: flex-start;
 }
 
@@ -53,42 +70,54 @@
   color: var(--slate);
 }
 
+.hero-now {
+  font-size: calc(var(--u) * 13);
+  letter-spacing: 0.3em;
+  color: var(--seal);
+  border: 1px solid var(--seal);
+  padding: calc(var(--u) * 6) calc(var(--u) * 12);
+}
+
 .hero-intro {
   position: absolute;
-  max-width: calc(var(--u) * 540);
-  font-size: calc(var(--u) * 19);
-  line-height: 2.1;
+  max-width: calc(var(--u) * 520);
+  font-size: calc(var(--u) * 20);
+  line-height: 2;
   color: var(--ink);
 }
 
 [data-variant='desktop'] .hero-intro {
   left: calc(var(--u) * 40);
-  bottom: calc(var(--u) * 150);
+  bottom: calc(var(--u) * 190);
 }
 
-.hero-skills {
+/* 海报底部致密 billing block(经典电影海报下沿的密排职员字) */
+.hero-billing {
   position: absolute;
-  font-size: calc(var(--u) * 14);
-  letter-spacing: 0.12em;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(var(--u) * 66);
+  width: calc(var(--u) * 980);
+  max-width: 88%;
+  text-align: center;
+  font-size: calc(var(--u) * 11);
+  letter-spacing: 0.18em;
+  line-height: 1.9;
   color: var(--slate);
-}
-
-[data-variant='desktop'] .hero-skills {
-  left: calc(var(--u) * 40);
-  bottom: calc(var(--u) * 90);
 }
 
 .hero-hint {
   position: absolute;
-  bottom: calc(var(--u) * 26);
+  bottom: calc(var(--u) * 24);
   left: 50%;
   transform: translateX(-50%);
+  font-family: var(--font-mono);
   font-size: calc(var(--u) * 13);
   letter-spacing: 0.28em;
   color: var(--slate);
 }
 
-/* Hero 移动端:纵向流式 */
+/* Hero 移动端 */
 [data-variant='mobile'] .hero-title {
   position: absolute;
   top: calc(var(--u) * 175);
@@ -98,7 +127,7 @@
 
 [data-variant='mobile'] .hero-title-en {
   position: absolute;
-  top: calc(var(--u) * 120);
+  top: calc(var(--u) * 200);
   left: calc(var(--u) * 70);
   font-size: calc(var(--u) * 110);
 }
@@ -112,218 +141,565 @@
   font-size: calc(var(--u) * 20);
 }
 
+[data-variant='mobile'] .hero-now {
+  font-size: calc(var(--u) * 18);
+}
+
 [data-variant='mobile'] .hero-intro {
   left: calc(var(--u) * 70);
   right: calc(var(--u) * 70);
-  bottom: calc(var(--u) * 230);
-  font-size: calc(var(--u) * 26);
+  bottom: calc(var(--u) * 280);
+  font-size: calc(var(--u) * 27);
   line-height: 2;
+  max-width: none;
 }
 
-[data-variant='mobile'] .hero-skills {
+[data-variant='mobile'] .hero-billing {
+  width: auto;
   left: calc(var(--u) * 70);
-  bottom: calc(var(--u) * 150);
-  font-size: calc(var(--u) * 20);
+  right: calc(var(--u) * 70);
+  transform: none;
+  bottom: calc(var(--u) * 130);
+  font-size: calc(var(--u) * 15);
 }
 
 [data-variant='mobile'] .hero-hint {
   font-size: calc(var(--u) * 20);
 }
 
-/* ---------- Project:一幕一张海报 ---------- */
-.project-layout {
+/* ---------- 序:关于我 ---------- */
+.prologue-layout {
   position: relative;
   width: 100%;
   height: 100%;
 }
 
-.project-act {
-  position: absolute;
-}
-
-[data-variant='desktop'] .project-act {
-  top: calc(var(--u) * 40);
-  left: calc(var(--u) * 40);
-}
-
-.project-name-latin {
-  font-family: var(--font-mono);
-  font-size: calc(var(--u) * 18);
-  letter-spacing: 0.14em;
-  color: var(--slate);
-  margin-top: calc(var(--u) * 14);
-}
-
-/* 中文竖排片名:海报主视觉 */
-.project-title-zh {
-  font-size: calc(var(--u) * 118);
-  line-height: 1.16;
+.prologue-title {
+  font-size: calc(var(--u) * 170);
   color: var(--ink);
 }
 
-[data-variant='desktop'] .project-title-block {
+.prologue-title-en {
+  font-size: calc(var(--u) * 110);
+  line-height: 1;
+  letter-spacing: 0.03em;
+}
+
+[data-variant='desktop'] .prologue-title {
   position: absolute;
-  top: calc(var(--u) * 40);
-  right: calc(var(--u) * 64);
+  top: calc(var(--u) * 60);
+  right: calc(var(--u) * 90);
+}
+
+[data-variant='desktop'] .prologue-title-en {
+  position: absolute;
+  top: calc(var(--u) * 80);
+  left: calc(var(--u) * 40);
+}
+
+.prologue-lines {
+  position: absolute;
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: column;
+  gap: calc(var(--u) * 26);
+}
+
+[data-variant='desktop'] .prologue-lines {
+  left: calc(var(--u) * 40);
+  top: calc(var(--u) * 270);
+  max-width: calc(var(--u) * 820);
+}
+
+.prologue-line {
+  font-size: calc(var(--u) * 24);
+  line-height: 1.9;
+  color: var(--ink);
+}
+
+.prologue-line::before {
+  content: '';
+  display: inline-block;
+  width: calc(var(--u) * 26);
+  height: calc(var(--u) * 3);
+  background: var(--seal);
+  margin-right: calc(var(--u) * 16);
+  vertical-align: middle;
+}
+
+.prologue-skills {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--u) * 12);
+}
+
+[data-variant='desktop'] .prologue-skills {
+  left: calc(var(--u) * 40);
+  bottom: calc(var(--u) * 110);
+  max-width: calc(var(--u) * 760);
+}
+
+.skill-tag {
+  font-size: calc(var(--u) * 13);
+  letter-spacing: 0.08em;
+  color: var(--slate);
+  border: 1px solid var(--hairline);
+  padding: calc(var(--u) * 7) calc(var(--u) * 14);
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.skill-tag:hover {
+  border-color: var(--seal);
+  color: var(--seal);
+}
+
+/* 序 移动端 */
+[data-variant='mobile'] .prologue-title {
+  position: absolute;
+  top: calc(var(--u) * 90);
+  right: calc(var(--u) * 70);
+  font-size: calc(var(--u) * 120);
+}
+
+[data-variant='mobile'] .prologue-title-en {
+  position: absolute;
+  top: calc(var(--u) * 90);
+  left: calc(var(--u) * 70);
+  font-size: calc(var(--u) * 72);
+}
+
+[data-variant='mobile'] .prologue-lines {
+  left: calc(var(--u) * 70);
+  right: calc(var(--u) * 70);
+  top: calc(var(--u) * 340);
+  gap: calc(var(--u) * 34);
+}
+
+[data-variant='mobile'] .prologue-line {
+  font-size: calc(var(--u) * 27);
+}
+
+[data-variant='mobile'] .prologue-skills {
+  left: calc(var(--u) * 70);
+  right: calc(var(--u) * 70);
+  bottom: calc(var(--u) * 140);
+  gap: calc(var(--u) * 14);
+}
+
+[data-variant='mobile'] .skill-tag {
+  font-size: calc(var(--u) * 19);
+  padding: calc(var(--u) * 9) calc(var(--u) * 16);
+}
+
+/* ---------- 排片表:作品 List ---------- */
+.filmo-layout {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.filmo-head {
+  display: flex;
+  align-items: baseline;
   gap: calc(var(--u) * 28);
+  margin-bottom: calc(var(--u) * 40);
+}
+
+.filmo-title-main {
+  font-size: calc(var(--u) * 52);
+  letter-spacing: 0.24em;
+}
+
+.filmo-sub {
+  font-size: calc(var(--u) * 14);
+  letter-spacing: 0.14em;
+  color: var(--slate);
+}
+
+.filmo-body {
+  display: flex;
+  gap: calc(var(--u) * 70);
+  flex: 1;
+  min-height: 0;
+}
+
+.filmo-list {
+  list-style: none;
+  flex: 1.25;
+  border-top: 1px solid var(--hairline);
+}
+
+.filmo-item {
+  border-bottom: 1px solid var(--hairline);
+}
+
+.filmo-row {
+  display: grid;
+  grid-template-columns: calc(var(--u) * 120) 1fr auto calc(var(--u) * 50);
+  align-items: center;
+  gap: calc(var(--u) * 28);
+  padding: calc(var(--u) * 30) calc(var(--u) * 8);
+  cursor: pointer;
+}
+
+.filmo-no {
+  font-size: calc(var(--u) * 14);
+  letter-spacing: 0.2em;
+  color: var(--slate);
+  transition: color 0.2s ease;
+}
+
+.filmo-names {
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--u) * 22);
+  min-width: 0;
+}
+
+.filmo-name {
+  font-size: calc(var(--u) * 46);
+  line-height: 1.2;
+  color: var(--ink);
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+.filmo-latin {
+  font-size: calc(var(--u) * 14);
+  letter-spacing: 0.1em;
+  color: var(--slate);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filmo-year {
+  font-size: calc(var(--u) * 14);
+  color: var(--slate);
+}
+
+.filmo-arrow {
+  font-size: calc(var(--u) * 20);
+  color: var(--hairline);
+  text-align: right;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.filmo-row:hover .filmo-name,
+.filmo-row:focus-visible .filmo-name {
+  color: var(--row-accent);
+}
+
+.filmo-row:hover .filmo-no,
+.filmo-row:focus-visible .filmo-no {
+  color: var(--row-accent);
+}
+
+.filmo-row:hover .filmo-arrow,
+.filmo-row:focus-visible .filmo-arrow {
+  color: var(--row-accent);
+  transform: translateX(calc(var(--u) * 6));
+}
+
+/* 右侧场刊面板 */
+.filmo-panel {
+  flex: 1;
+  border-left: 1px solid var(--hairline);
+  padding-left: calc(var(--u) * 56);
+  display: flex;
   align-items: flex-start;
 }
 
-/* 英文片名:横排大字 */
-.project-title-en {
-  font-size: calc(var(--u) * 96);
-  line-height: 1.04;
-  letter-spacing: 0.01em;
-  max-width: calc(var(--u) * 900);
-}
-
-[data-variant='desktop'] .project-title-block-en {
-  position: absolute;
-  top: calc(var(--u) * 110);
-  left: calc(var(--u) * 40);
+.filmo-card {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--u) * 20);
+  gap: calc(var(--u) * 22);
+  animation: filmo-card-in 0.25s ease;
+  max-width: calc(var(--u) * 380);
 }
 
-.project-desc {
-  position: absolute;
+@keyframes filmo-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--u) * 10));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.filmo-card-title {
+  font-size: calc(var(--u) * 40);
+  line-height: 1.2;
+}
+
+.filmo-card-desc {
+  font-size: calc(var(--u) * 16);
+  line-height: 1.95;
+  color: var(--ink);
+}
+
+.filmo-card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--u) * 12);
+}
+
+.filmo-card-idle {
+  align-items: flex-start;
+}
+
+.filmo-idle-text {
+  font-size: calc(var(--u) * 15);
+  line-height: 2;
+  color: var(--slate);
+  white-space: pre-line;
+}
+
+.filmo-hint {
+  margin-top: calc(var(--u) * 26);
+  font-size: calc(var(--u) * 13);
+  letter-spacing: 0.22em;
+  color: var(--slate);
+}
+
+/* 排片表 移动端:单列,无面板,行内描述 */
+[data-variant='mobile'] .filmo-head {
+  flex-direction: column;
+  gap: calc(var(--u) * 10);
+  margin-top: calc(var(--u) * 40);
+}
+
+[data-variant='mobile'] .filmo-title-main {
+  font-size: calc(var(--u) * 64);
+}
+
+[data-variant='mobile'] .filmo-sub {
   font-size: calc(var(--u) * 19);
+}
+
+[data-variant='mobile'] .filmo-row {
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'no year'
+    'names arrow';
+  row-gap: calc(var(--u) * 10);
+  padding: calc(var(--u) * 26) 0;
+}
+
+[data-variant='mobile'] .filmo-no {
+  grid-area: no;
+  font-size: calc(var(--u) * 18);
+}
+
+[data-variant='mobile'] .filmo-names {
+  grid-area: names;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(var(--u) * 8);
+}
+
+[data-variant='mobile'] .filmo-name {
+  font-size: calc(var(--u) * 52);
+  white-space: normal;
+}
+
+[data-variant='mobile'] .filmo-latin {
+  font-size: calc(var(--u) * 18);
+}
+
+[data-variant='mobile'] .filmo-year {
+  grid-area: year;
+  font-size: calc(var(--u) * 18);
+}
+
+[data-variant='mobile'] .filmo-arrow {
+  grid-area: arrow;
+  align-self: end;
+}
+
+[data-variant='mobile'] .filmo-mobile-desc {
+  font-size: calc(var(--u) * 22);
+  line-height: 1.8;
+  color: var(--slate);
+  padding: 0 0 calc(var(--u) * 24);
+}
+
+[data-variant='mobile'] .filmo-hint {
+  font-size: calc(var(--u) * 18);
+}
+
+/* ---------- 幕后:CineView 特写 ---------- */
+.backstage-layout {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.backstage-title {
+  font-size: calc(var(--u) * 150);
+  color: var(--ink);
+}
+
+.backstage-title-en {
+  font-size: calc(var(--u) * 100);
+  line-height: 1;
+  letter-spacing: 0.03em;
+}
+
+[data-variant='desktop'] .backstage-title {
+  position: absolute;
+  top: calc(var(--u) * 60);
+  left: calc(var(--u) * 60);
+}
+
+[data-variant='desktop'] .backstage-title-en {
+  position: absolute;
+  top: calc(var(--u) * 80);
+  left: calc(var(--u) * 40);
+}
+
+.backstage-lead {
+  position: absolute;
+  font-size: calc(var(--u) * 21);
   line-height: 2;
   color: var(--ink);
 }
 
-[data-variant='desktop'] .project-desc {
-  left: calc(var(--u) * 40);
-  bottom: calc(var(--u) * 200);
-  max-width: calc(var(--u) * 560);
+[data-variant='desktop'] .backstage-lead {
+  right: calc(var(--u) * 60);
+  top: calc(var(--u) * 110);
+  max-width: calc(var(--u) * 640);
 }
 
-.project-meta {
-  position: absolute;
-}
-
-[data-variant='desktop'] .project-meta {
-  left: calc(var(--u) * 40);
-  bottom: calc(var(--u) * 140);
-}
-
-.project-links {
+.backstage-frames {
   position: absolute;
   display: flex;
-  gap: calc(var(--u) * 16);
+  gap: calc(var(--u) * 36);
 }
 
-[data-variant='desktop'] .project-links {
-  left: calc(var(--u) * 40);
-  bottom: calc(var(--u) * 56);
+[data-variant='desktop'] .backstage-frames {
+  right: calc(var(--u) * 60);
+  top: calc(var(--u) * 380);
 }
 
-/* 印章:中英文共用同一落印位(右侧中下,竖排片名/横排大字的落款处) */
-.project-seal {
-  position: absolute;
-}
-
-[data-variant='desktop'] .project-seal {
-  right: calc(var(--u) * 120);
-  top: calc(var(--u) * 470);
-}
-
-.project-shot {
-  position: absolute;
+/* 画格:胶片单帧,里面的预设动画持续真实播放 */
+.demo-frame {
   border: 1px solid var(--hairline);
-  padding: calc(var(--u) * 10);
-  background: #fff;
-}
-
-[data-variant='desktop'] .project-shot {
-  left: calc(var(--u) * 660);
-  top: calc(var(--u) * 120);
-  width: calc(var(--u) * 460);
-}
-
-.project-shot img {
-  display: block;
-  width: 100%;
-}
-
-/* Project 移动端 */
-[data-variant='mobile'] .project-act {
-  top: calc(var(--u) * 80);
-  left: calc(var(--u) * 70);
-}
-
-[data-variant='mobile'] .act-label {
-  font-size: calc(var(--u) * 22);
-}
-
-[data-variant='mobile'] .project-name-latin {
-  font-size: calc(var(--u) * 22);
-}
-
-[data-variant='mobile'] .project-title-block {
-  position: absolute;
-  top: calc(var(--u) * 195);
-  right: calc(var(--u) * 70);
-  display: flex;
-  flex-direction: row-reverse;
-  gap: calc(var(--u) * 24);
-  align-items: flex-start;
-}
-
-[data-variant='mobile'] .project-title-zh {
-  font-size: calc(var(--u) * 112);
-}
-
-[data-variant='mobile'] .project-title-block-en {
-  position: absolute;
-  top: calc(var(--u) * 190);
-  left: calc(var(--u) * 70);
-  right: calc(var(--u) * 70);
+  background: #fffdf8;
+  padding: calc(var(--u) * 14);
   display: flex;
   flex-direction: column;
-  gap: calc(var(--u) * 18);
+  gap: calc(var(--u) * 12);
 }
 
-[data-variant='mobile'] .project-title-en {
-  font-size: calc(var(--u) * 74);
+.demo-stage {
+  width: calc(var(--u) * 150);
+  height: calc(var(--u) * 130);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
-[data-variant='mobile'] .project-seal {
-  right: calc(var(--u) * 90);
-  top: calc(var(--u) * 560);
+.demo-chip {
+  width: calc(var(--u) * 52);
+  height: calc(var(--u) * 52);
+  background: var(--seal);
+  border-radius: calc(var(--u) * 5);
 }
 
-[data-variant='mobile'] .project-desc {
+/* 直接子元素是 Animate 包裹层,nth-child 作用其上 */
+.backstage-frames > :nth-child(2) .demo-chip {
+  background: #35507a;
+}
+
+.backstage-frames > :nth-child(3) .demo-chip {
+  background: #4a6b50;
+}
+
+.demo-caption {
+  font-size: calc(var(--u) * 13);
+  letter-spacing: 0.2em;
+  color: var(--slate);
+  text-align: center;
+}
+
+.backstage-foot {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 36);
+}
+
+[data-variant='desktop'] .backstage-foot {
+  left: calc(var(--u) * 40);
+  bottom: calc(var(--u) * 110);
+}
+
+.backstage-stats {
+  font-size: calc(var(--u) * 15);
+  letter-spacing: 0.16em;
+  color: var(--slate);
+}
+
+/* 幕后 移动端 */
+[data-variant='mobile'] .backstage-title {
+  position: absolute;
+  top: calc(var(--u) * 90);
+  left: calc(var(--u) * 70);
+  font-size: calc(var(--u) * 110);
+}
+
+[data-variant='mobile'] .backstage-title-en {
+  position: absolute;
+  top: calc(var(--u) * 90);
+  left: calc(var(--u) * 70);
+  font-size: calc(var(--u) * 66);
+}
+
+[data-variant='mobile'] .backstage-lead {
   left: calc(var(--u) * 70);
   right: calc(var(--u) * 70);
-  bottom: calc(var(--u) * 320);
+  top: calc(var(--u) * 330);
   font-size: calc(var(--u) * 26);
+  max-width: none;
 }
 
-[data-variant='mobile'] .project-meta {
+[data-variant='mobile'] .backstage-frames {
   left: calc(var(--u) * 70);
   right: calc(var(--u) * 70);
-  bottom: calc(var(--u) * 230);
+  top: calc(var(--u) * 720);
+  gap: calc(var(--u) * 24);
+  justify-content: space-between;
 }
 
-[data-variant='mobile'] .project-meta .meta-row {
-  font-size: calc(var(--u) * 20);
+[data-variant='mobile'] .demo-stage {
+  width: calc(var(--u) * 150);
+  height: calc(var(--u) * 130);
 }
 
-[data-variant='mobile'] .project-links {
+[data-variant='mobile'] .demo-caption {
+  font-size: calc(var(--u) * 17);
+}
+
+[data-variant='mobile'] .backstage-foot {
   left: calc(var(--u) * 70);
-  bottom: calc(var(--u) * 100);
+  right: calc(var(--u) * 70);
+  bottom: calc(var(--u) * 130);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(var(--u) * 24);
 }
 
-[data-variant='mobile'] .film-link {
-  font-size: calc(var(--u) * 22);
-  padding: calc(var(--u) * 16) calc(var(--u) * 30);
+[data-variant='mobile'] .backstage-stats {
+  font-size: calc(var(--u) * 19);
 }
 
-/* ---------- Credits:落款 ---------- */
+/* ---------- 落款 ---------- */
 .credits-layout {
   position: relative;
   width: 100%;
@@ -337,7 +713,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: calc(var(--u) * 34);
+  gap: calc(var(--u) * 30);
 }
 
 .credits-title {
@@ -348,10 +724,23 @@
   text-indent: 0.4em;
 }
 
+.credits-roles {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--u) * 10);
+}
+
+.credits-role {
+  font-size: calc(var(--u) * 13);
+  letter-spacing: 0.24em;
+  color: var(--slate);
+}
+
 .credits-rows {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--u) * 20);
+  gap: calc(var(--u) * 18);
 }
 
 .credits-row {
@@ -407,6 +796,10 @@
 
 [data-variant='mobile'] .credits-title {
   font-size: calc(var(--u) * 56);
+}
+
+[data-variant='mobile'] .credits-role {
+  font-size: calc(var(--u) * 19);
 }
 
 [data-variant='mobile'] .credits-row {

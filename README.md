@@ -1,8 +1,8 @@
 # Alien · 作品集 — Works
 
-个人作品集,也是自研框架 [CineView](https://github.com/AlienMu/cineView) 的样片:整站是一场"中文电影海报"式的滚动放映——每个 GitHub 项目一幕海报,竖排宋体片名、朱红印章随滚动盖下,终幕以字幕表落款。
+个人作品集,也是自研框架 [CineView](https://github.com/AlienMu/cineView) 的样片:整站是一场"中文电影海报"式的滚动放映——片名海报开场,序幕自我介绍逐行揭示,**排片表**里所有 GitHub 项目随滚动截流逐幕登场(悬停高亮 + 场刊预览),幕后一幕现场演示框架动画预设,终幕以职员表落款。
 
-A personal portfolio that doubles as the demo reel of my self-built framework **CineView** — a cinematic, Chinese-movie-poster-style scroll experience. Each GitHub project gets a poster scene; a vermilion seal stamps down as you scroll.
+A personal portfolio that doubles as the demo reel of my self-built framework **CineView** — a cinematic, Chinese-movie-poster-style scroll experience: title poster, a prologue that reveals line by line, a scroll-locked **filmography bill** where every repo takes the stage (hover to preview), a backstage scene with live animation presets, and a credits finale.
 
 **Live**: https://alienmu.github.io/portfolio/
 

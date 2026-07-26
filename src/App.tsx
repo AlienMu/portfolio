@@ -2,7 +2,9 @@ import { CineView, Scene } from 'cineview';
 import type { CineViewErrorDetail } from 'cineview';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { HeroScene } from '@/scenes/HeroScene';
-import { ProjectScene } from '@/scenes/ProjectScene';
+import { PrologueScene } from '@/scenes/PrologueScene';
+import { FilmographyScene } from '@/scenes/FilmographyScene';
+import { BackstageScene } from '@/scenes/BackstageScene';
 import { CreditsScene } from '@/scenes/CreditsScene';
 import { useDesignSize } from '@/hooks/useDesignSize';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -41,17 +43,29 @@ export default function App() {
           <HeroScene variant={variant} reduced={reduced} />
         </Scene>
 
-        {projects.map((project, index) => (
-          <Scene
-            key={project.name}
-            sceneId={`project-${project.name}`}
-            layout={{ width: '100%', height: '100vh' }}
-            scroll={{ zoneId: `${project.name}-zone`, trigger: 'center-lock' }}
-            assets={project.screenshot ? { preloadImages: [project.screenshot] } : undefined}
-          >
-            <ProjectScene project={project} index={index} variant={variant} reduced={reduced} />
-          </Scene>
-        ))}
+        <Scene
+          sceneId="prologue"
+          layout={{ width: '100%', height: '100vh' }}
+          scroll={{ zoneId: 'prologue-zone', trigger: 'center-lock' }}
+        >
+          <PrologueScene variant={variant} reduced={reduced} />
+        </Scene>
+
+        <Scene
+          sceneId="filmography"
+          layout={{ width: '100%', height: '100vh' }}
+          scroll={{ zoneId: 'filmography-zone', trigger: 'center-lock' }}
+        >
+          <FilmographyScene projects={projects} variant={variant} reduced={reduced} />
+        </Scene>
+
+        <Scene
+          sceneId="backstage"
+          layout={{ width: '100%', height: '100vh' }}
+          scroll={{ zoneId: 'backstage-zone', trigger: 'center-lock' }}
+        >
+          <BackstageScene variant={variant} reduced={reduced} />
+        </Scene>
 
         <Scene sceneId="credits" layout={{ width: '100%', height: '100vh' }}>
           <CreditsScene variant={variant} reduced={reduced} />
