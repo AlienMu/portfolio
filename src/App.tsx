@@ -2,6 +2,7 @@ import { CineView, Scene } from 'cineview';
 import type { CineViewErrorDetail } from 'cineview';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { HeroScene } from '@/scenes/HeroScene';
+import { InterestsScene } from '@/scenes/InterestsScene';
 import { FilmographyScene } from '@/scenes/FilmographyScene';
 import { SiteScene } from '@/scenes/SiteScene';
 import { ContactScene } from '@/scenes/ContactScene';
@@ -40,6 +41,10 @@ export default function App() {
       >
         <Scene sceneId="hero" layout={{ width: '100%', height: '100vh' }}>
           <HeroScene variant={variant} reduced={reduced} />
+        </Scene>
+
+        <Scene sceneId="interests" layout={{ width: '100%', height: '100vh' }}>
+          <InterestsScene variant={variant} reduced={reduced} />
         </Scene>
 
         {/* 滚动截流只给作品列表:逐行展开演完才放行 */}

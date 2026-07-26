@@ -24,7 +24,7 @@ export function ContactScene({ variant, reduced }: ContactSceneProps) {
     <div className="poster" data-variant={variant}>
       <div className="poster-frame" />
       <GhostGlyph char="见" style={{ left: '3%', top: '8%' }} />
-      <PageNo index={4} />
+      <PageNo index={5} total={5} />
       {/* 居中容器在 Cue 外:动画宿主只包内容块,让它远离视口顶边,
           否则滚到绝对底部时内容顶边落进 exitMargin 闸门被判退场而隐藏 */}
       <div className="contact-layout">

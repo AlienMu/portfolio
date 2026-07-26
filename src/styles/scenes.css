@@ -37,6 +37,7 @@
 
 /* 内容层压在底纹之上 */
 .hero-grid,
+.interests-flow,
 .filmo-layout,
 .site-flow,
 .contact-layout {
@@ -100,7 +101,7 @@
 }
 
 .hero-greeting {
-  font-size: min(calc(var(--u) * 92), 11vh);
+  font-size: min(calc(var(--u) * 104), 12.5vh);
   line-height: 1.25;
   color: var(--ink);
 }
@@ -116,46 +117,11 @@
   color: var(--seal);
 }
 
-.hero-lines {
-  display: flex;
-  flex-direction: column;
-  gap: 2.2vh;
-}
-
-.hero-line {
-  font-size: calc(var(--u) * 21);
-  line-height: 1.85;
-  color: var(--ink);
-}
-
-.hero-line::before {
-  content: '';
-  display: inline-block;
-  width: calc(var(--u) * 24);
-  height: calc(var(--u) * 3);
-  background: var(--seal);
-  margin-right: calc(var(--u) * 14);
-  vertical-align: middle;
-}
-
-.hero-skills {
+/* 入口按钮行 */
+.hero-socials {
   display: flex;
   flex-wrap: wrap;
-  gap: calc(var(--u) * 11);
-}
-
-.skill-tag {
-  font-size: calc(var(--u) * 13);
-  letter-spacing: 0.08em;
-  color: var(--slate);
-  border: 1px solid var(--hairline);
-  padding: calc(var(--u) * 7) calc(var(--u) * 14);
-  transition: border-color 0.2s ease, color 0.2s ease;
-}
-
-.skill-tag:hover {
-  border-color: var(--seal);
-  color: var(--seal);
+  gap: calc(var(--u) * 14);
 }
 
 .hero-side {
@@ -231,15 +197,6 @@
   font-size: calc(var(--u) * 20);
 }
 
-[data-variant='mobile'] .hero-line {
-  font-size: calc(var(--u) * 25);
-}
-
-[data-variant='mobile'] .skill-tag {
-  font-size: calc(var(--u) * 18);
-  padding: calc(var(--u) * 8) calc(var(--u) * 15);
-}
-
 [data-variant='mobile'] .hero-marquee {
   left: calc(var(--u) * 40);
   right: calc(var(--u) * 40);
@@ -258,7 +215,163 @@
   font-size: calc(var(--u) * 16);
 }
 
-/* ---------- 第二页:个人作品 ---------- */
+/* ---------- 第二页:爱好与技能 ---------- */
+.interests-flow {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6vw;
+}
+
+.interests-left {
+  display: flex;
+  flex-direction: column;
+  gap: 5vh;
+}
+
+.interests-title {
+  font-size: min(calc(var(--u) * 52), 7vh);
+  letter-spacing: 0.24em;
+}
+
+/* 爱好:三根竖排大字词柱,像海报上垂下的签条 */
+.hobby-words {
+  display: flex;
+  gap: calc(var(--u) * 52);
+  align-items: flex-start;
+}
+
+.hobby-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.2vh;
+}
+
+.hobby-word {
+  font-size: min(calc(var(--u) * 72), 9vh);
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.hobby-note {
+  font-size: calc(var(--u) * 12);
+  letter-spacing: 0.22em;
+  color: var(--slate);
+}
+
+/* 英文爱好词:横排堆叠 */
+.hobby-words[data-lang='en'] {
+  flex-direction: column;
+  gap: 3.2vh;
+}
+
+.hobby-words[data-lang='en'] .hobby-col {
+  flex-direction: row;
+  align-items: baseline;
+  gap: calc(var(--u) * 26);
+}
+
+.hobby-words[data-lang='en'] .hobby-word {
+  font-size: min(calc(var(--u) * 64), 7.5vh);
+}
+
+/* 技能:条目清单,横线逐行铺开 */
+.skills-list {
+  flex: 1;
+  max-width: calc(var(--u) * 620);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.skill-row {
+  position: relative;
+  padding: 3.2vh calc(var(--u) * 4);
+}
+
+.skill-rule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--hairline);
+  transform-origin: left center;
+}
+
+.skill-cells {
+  display: grid;
+  grid-template-columns: calc(var(--u) * 150) auto;
+  gap: calc(var(--u) * 44);
+  align-items: baseline;
+}
+
+.skill-label {
+  font-size: min(calc(var(--u) * 24), 3.2vh);
+  letter-spacing: 0.22em;
+}
+
+.skill-values {
+  font-size: calc(var(--u) * 15);
+  letter-spacing: 0.06em;
+  color: var(--slate);
+}
+
+/* 爱好与技能 移动端:纵向堆叠 */
+[data-variant='mobile'] .interests-flow {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 4vh;
+}
+
+[data-variant='mobile'] .interests-left {
+  gap: 3.5vh;
+}
+
+[data-variant='mobile'] .interests-title {
+  font-size: calc(var(--u) * 56);
+}
+
+[data-variant='mobile'] .hobby-words {
+  justify-content: space-between;
+  gap: calc(var(--u) * 30);
+}
+
+[data-variant='mobile'] .hobby-word {
+  font-size: calc(var(--u) * 76);
+}
+
+[data-variant='mobile'] .hobby-note {
+  font-size: calc(var(--u) * 17);
+}
+
+[data-variant='mobile'] .skills-list {
+  max-width: none;
+  flex: none;
+}
+
+[data-variant='mobile'] .skill-row {
+  padding: 2.4vh 0;
+}
+
+[data-variant='mobile'] .skill-cells {
+  grid-template-columns: calc(var(--u) * 120) auto;
+  gap: calc(var(--u) * 30);
+}
+
+[data-variant='mobile'] .skill-label {
+  font-size: calc(var(--u) * 26);
+}
+
+[data-variant='mobile'] .skill-values {
+  font-size: calc(var(--u) * 20);
+}
+
+/* ---------- 第三页:个人作品 ---------- */
 .filmo-layout {
   width: 100%;
   height: 100%;
@@ -366,15 +479,14 @@
   transition: color 0.2s ease, transform 0.2s ease;
 }
 
-.filmo-row:hover .filmo-name,
-.filmo-row:focus-visible .filmo-name,
-.filmo-row:hover .filmo-no,
-.filmo-row:focus-visible .filmo-no {
+/* 高亮完全由 data-active 驱动(展开期联动、展开后 hover),
+   不用 :hover 选择器,才能在展开期"关闭 hover" */
+.filmo-row[data-active='true'] .filmo-name,
+.filmo-row[data-active='true'] .filmo-no {
   color: var(--row-accent);
 }
 
-.filmo-row:hover .filmo-arrow,
-.filmo-row:focus-visible .filmo-arrow {
+.filmo-row[data-active='true'] .filmo-arrow {
   color: var(--row-accent);
   transform: translateX(calc(var(--u) * 6));
 }

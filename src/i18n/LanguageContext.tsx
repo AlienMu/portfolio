@@ -7,6 +7,8 @@ interface LanguageContextType {
   toggleLanguage: () => void;
   t: (key: TranslationKey) => string;
   tList: (key: ListKey) => readonly string[];
+  hobbies: readonly HobbyEntry[];
+  skillGroups: readonly SkillGroup[];
 }
 
 const translations = {
@@ -16,6 +18,7 @@ const translations = {
     avatarCaption: 'ALIEN MU',
     marquee: 'PERSONAL WORKS · ALIEN MU · FRONTEND ENGINEER · BUILT WITH CINEVIEW · ',
     scrollHint: 'Scroll',
+    interestsTitle: 'HOBBIES & SKILLS',
     worksTitle: 'WORKS',
     worksSub: 'Scroll to unfold · hover to preview · click to open',
     worksIdle: 'Point at any row —\nits details unfold here.',
@@ -39,6 +42,7 @@ const translations = {
     avatarCaption: 'ALIEN MU',
     marquee: '个人作品 · ALIEN MU · 前端工程师 · 自研框架 CINEVIEW · ',
     scrollHint: '向下滚动',
+    interestsTitle: '爱好与技能',
     worksTitle: '个人作品',
     worksSub: '滚动逐行展开 · 移入预览 · 点击进入',
     worksIdle: '把指针移到任意一行，\n这里会展开它的详情。',
@@ -75,6 +79,45 @@ const lists = {
   },
 } as const;
 
+export interface HobbyEntry {
+  word: string;
+  note: string;
+}
+
+export interface SkillGroup {
+  label: string;
+  values: string;
+}
+
+const structured = {
+  en: {
+    hobbies: [
+      { word: 'Music', note: 'headphones always on' },
+      { word: 'Riding', note: 'motorcycles and wind' },
+      { word: 'Travel', note: 'wandering around' },
+    ] as HobbyEntry[],
+    skillGroups: [
+      { label: 'Frameworks', values: 'React · Vue · Nuxt' },
+      { label: 'Languages', values: 'TypeScript · Node.js' },
+      { label: 'Tooling', values: 'Vite · Pinia · Framer Motion' },
+      { label: 'Focus', values: 'Performance · Architecture · Motion' },
+    ] as SkillGroup[],
+  },
+  zh: {
+    hobbies: [
+      { word: '听歌', note: '耳机不离身' },
+      { word: '骑摩托', note: '风里来去' },
+      { word: '旅行', note: '到处溜达' },
+    ] as HobbyEntry[],
+    skillGroups: [
+      { label: '框架', values: 'React · Vue · Nuxt' },
+      { label: '语言', values: 'TypeScript · Node.js' },
+      { label: '工程', values: 'Vite · Pinia · Framer Motion' },
+      { label: '专长', values: '性能优化 · 前端架构 · 交互动效' },
+    ] as SkillGroup[],
+  },
+} as const;
+
 export type TranslationKey = keyof typeof translations.en;
 export type ListKey = keyof typeof lists.en;
 
@@ -100,9 +143,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const t = (key: TranslationKey): string => translations[language][key];
   const tList = (key: ListKey): readonly string[] => lists[language][key];
+  const { hobbies, skillGroups } = structured[language];
 
   return (
-    <LanguageContext.Provider value={{ language, toggleLanguage, t, tList }}>
+    <LanguageContext.Provider value={{ language, toggleLanguage, t, tList, hobbies, skillGroups }}>
       {children}
     </LanguageContext.Provider>
   );

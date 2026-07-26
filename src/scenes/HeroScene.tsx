@@ -6,22 +6,17 @@ import { SOLID } from '@/components/solid';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { LayoutVariant } from '@/hooks/useDesignSize';
 
-const SKILL_TAGS = [
-  'React',
-  'Vue',
-  'TypeScript',
-  'Node.js',
-  'Vite',
-  'Nuxt',
-  'Pinia',
-  'Framer Motion',
-  'Performance',
-  'Architecture',
-];
+/** 入口按钮。Telegram 用户名如有出入请改这里。 */
+const SOCIALS = [
+  { label: 'GitHub', href: 'https://github.com/AlienMu' },
+  { label: 'X', href: 'https://x.com/AlienMu777' },
+  { label: 'Telegram', href: 'https://t.me/AlienMu777' },
+  { label: 'Email', href: 'mailto:mu1hang@foxmail.com' },
+] as const;
 
-/** 问候语切分:汉字/标点逐字,latin 单词整块 */
+/** 问候语切分:汉字/标点逐字，latin 单词整块 */
 function tokenize(text: string): string[] {
-  return text.match(/[一-鿿,。、!?]|[^一-鿿,。、!?]+/g) ?? [text];
+  return text.match(/[一-鿿，。、!?！?]|[^一-鿿，。、!?！?]+/g) ?? [text];
 }
 
 interface HeroSceneProps {
@@ -29,17 +24,16 @@ interface HeroSceneProps {
   reduced: boolean;
 }
 
-/** 第一页:自我介绍。问候语逐字立起,头像相框落位,独白与技能墙跟上。 */
+/** 第一页:只有我——逐字问候、头像相框、入口按钮。 */
 export function HeroScene({ variant, reduced }: HeroSceneProps) {
-  const { t, tList } = useLanguage();
+  const { t } = useLanguage();
   const tokens = tokenize(t('greeting'));
-  const lines = tList('bioLines');
 
   return (
     <div className="poster" data-variant={variant}>
       <div className="poster-frame" />
       <GhostGlyph char="我" style={{ right: '4%', bottom: '8%' }} />
-      <PageNo index={1} />
+      <PageNo index={1} total={5} />
       <div className="hero-grid">
         <div className="hero-main">
           {/* 单个 Animate 包整行(块级宿主不能逐字塞进 h1),
@@ -75,36 +69,24 @@ export function HeroScene({ variant, reduced }: HeroSceneProps) {
           >
             <p className="hero-role mono">{t('role')}</p>
           </Cue>
-          <div className="hero-lines">
-            {lines.map((line, i) => (
-              <Cue
-                key={line}
-                off={reduced}
-                animateId={`hero-line-${i}`}
-                enterAnimation="slide-up"
-                duration={{ enter: 360 }}
-                timeline={
-                  i === 0
-                    ? { waitFor: 'hero-role', delay: 50 }
-                    : { waitFor: `hero-line-${i - 1}`, delay: 40 }
-                }
-              >
-                <p className="hero-line">{line}</p>
-              </Cue>
-            ))}
-          </div>
           <Cue
             off={reduced}
-            animateId="hero-skills"
+            animateId="hero-socials"
             enterAnimation="slide-up"
-            duration={{ enter: 380 }}
-            timeline={{ waitFor: `hero-line-${lines.length - 1}`, delay: 50 }}
+            duration={{ enter: 420 }}
+            timeline={{ waitFor: 'hero-role', delay: 60 }}
           >
-            <div className="hero-skills">
-              {SKILL_TAGS.map((tag) => (
-                <span className="skill-tag mono" key={tag}>
-                  {tag}
-                </span>
+            <div className="hero-socials">
+              {SOCIALS.map((s) => (
+                <a
+                  key={s.label}
+                  className="film-link"
+                  href={s.href}
+                  target={s.href.startsWith('mailto:') ? undefined : '_blank'}
+                  rel="noreferrer"
+                >
+                  {s.label}
+                </a>
               ))}
             </div>
           </Cue>
@@ -117,10 +99,10 @@ export function HeroScene({ variant, reduced }: HeroSceneProps) {
             animate: { opacity: 1, y: 0, rotate: -2 },
           }}
           duration={{ enter: 550 }}
-          timeline={{ waitFor: 'hero-role', delay: 0 }}
+          timeline={{ waitFor: 'hero-greeting', delay: 100 }}
         >
           <div className="hero-side">
-            <AvatarCard size={variant === 'mobile' ? 330 : 300} />
+            <AvatarCard size={variant === 'mobile' ? 380 : 340} />
           </div>
         </Cue>
       </div>

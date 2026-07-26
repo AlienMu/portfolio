@@ -27,7 +27,7 @@ export function SiteScene({ variant, reduced }: SiteSceneProps) {
     <div className="poster" data-variant={variant}>
       <div className="poster-frame" />
       <GhostGlyph char="造" style={{ right: '3%', top: '6%' }} />
-      <PageNo index={3} />
+      <PageNo index={4} total={5} />
       <div className="site-flow">
         <Cue off={reduced} animateId="site-title" enterAnimation={SOLID} duration={{ enter: 450 }}>
           {({ enterProgress }) => (
