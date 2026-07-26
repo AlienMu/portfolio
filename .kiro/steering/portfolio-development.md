@@ -1,370 +1,59 @@
 ---
 title: Portfolio Development Guide
-description: Comprehensive guide for developing and maintaining the Alien Portfolio website
+description: Conventions for the CineView-powered portfolio (Vite + React SPA)
 inclusion: auto
-tags: [portfolio, nextjs, development, guidelines]
+tags: [portfolio, cineview, vite, react, guidelines]
 ---
 
 # Portfolio Development Guide
 
-This steering file provides comprehensive guidelines for developing, maintaining, and extending the Alien Portfolio website.
+本站是"中文电影海报"风格的个人作品集,整页跑在自研框架 **CineView**(github.com/AlienMu/cineView)上——网站本身就是框架的样片。
 
-## Project Overview
+## 技术栈(2026-07 重写后)
 
-### Tech Stack
-- **Framework**: Next.js 14 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **State Management**: React Context API
-- **Deployment**: Vercel-ready
+- **构建**: Vite 5 + React 18 + TypeScript(严格模式),SPA,无 SSR
+- **框架**: `cineview`(本地 link 依赖)+ framer-motion peer
+- **样式**: 手写 CSS(`src/styles/`),无 Tailwind;设计 token 见 global.css `:root`
+- **部署**: GitHub Pages,`.github/workflows/deploy.yml`(push + 每日 cron 自动采集重建)
 
-### Core Features
-1. Bilingual support (English/Chinese)
-2. Dark/Light theme switching
-3. Responsive design
-4. Performance optimized (Core Web Vitals compliant)
-5. Modern UI with gradients and animations
+## 铁律
 
-## Architecture Guidelines
+1. **cineview 构建顺序**:依赖是 `link:../cineView/cineview`,指向其 `dist/`。首次开发或框架更新后必须先 `cd ../cineView/cineview && pnpm build`,再回来 `pnpm dev`(改框架后需重启 vite)。
+2. **只用 scroll 纵向模式**:`mode="scroll"` + `direction:'y'`。drag 模式(无滚轮支持)与横向 scroll(已知损坏)禁用。
+3. **单一亮色方案**:纸 `#F6F4EF` / 墨 `#1F1D1A` / 朱 `#BE3B2A` / 黛 `#5A5E66` / 线 `#D8D4CB`。不做暗色模式,不加 `dark:` 逻辑。
+4. **单标尺布局**:所有长度用 `calc(var(--u) * 设计px)`;桌面稿 1440、移动稿 750,断点切换靠 `App.tsx` 的 `key={variant}` 重挂载。
+5. **竖排只给汉字**:`writing-mode: vertical-rl` 仅用于中文展示型文字;latin(仓库名、URL)一律横排等宽。
+6. **render-prop 擦洗动画必须给 `enterAnimation`(可用 `SOLID`)+ `duration`**,否则时间轴零长度、`enterProgress` 恒 0。
+7. **sceneId/zoneId 派生自仓库名**,fetch 脚本已断言唯一;重复 id 会静默毁掉滚动区。
+8. **reduced-motion**:所有动画经 `<Cue off={reduced}>` 包装,新动画同样要走 Cue。
+9. **背景覆盖 hack**:cineview 滚动根内联白底被 `[data-cineview-container] { background: var(--paper) !important }` 覆盖,升级框架后复查。
+10. **中文文案用全角标点**(,:),英文用半角;双语 key 加进 `src/i18n/LanguageContext.tsx` 时保持 en/zh 对齐。
 
-### Component Structure
+## 数据工作流
 
-All components follow these principles:
-- Use `'use client'` directive for interactive components
-- Implement proper TypeScript typing
-- Use Tailwind CSS for styling
-- Follow atomic design principles
+- **项目数据自动采集**:`pnpm fetch` → `scripts/fetch-repos.mjs` 拉 GitHub API(AlienMu 公开仓库),与 `content/curation.json` 合并 → `src/data/projects.json`(提交进 git,本地开发离线可用)。
+- **策展**:改 `content/curation.json`(顺序、中文片名/描述、accent 色、截图、demo 链接),再跑 `pnpm fetch`。
+- **CI 每日重建**:workflow 用内置 GITHUB_TOKEN 重新 fetch,新仓库最多滞后一天上线。
 
-### File Organization
+## 字体工作流
 
-```
-app/                    # Next.js App Router pages
-components/             # Reusable React components
-contexts/              # React Context providers
-public/                # Static assets
-```
+- 源字体(完整 TTF)提交在 `fonts/`;`pnpm fonts` → `scripts/subset-fonts.mjs` 扫描 src/ + content/ 全部字符,按 glyph 子集化产出 `src/assets/fonts/*.woff2`(约 70/55/8 KB)。
+- 新增中文文案后重跑 `pnpm fonts`,否则新字形会回退到系统宋体。
+- 全部自托管,禁止引入字体 CDN(大陆访客)。
 
-### Naming Conventions
-
-- **Components**: PascalCase (e.g., `Header.tsx`, `ThemeToggle.tsx`)
-- **Utilities**: camelCase (e.g., `useLanguage.ts`)
-- **Constants**: UPPER_SNAKE_CASE (e.g., `DEFAULT_LANGUAGE`)
-- **CSS Classes**: kebab-case via Tailwind utilities
-
-## Development Workflow
-
-### Adding New Features
-
-1. **Plan the feature**
-   - Identify affected components
-   - Consider i18n requirements
-   - Plan responsive behavior
-
-2. **Implement the feature**
-   - Create/modify components
-   - Add translations to `LanguageContext.tsx`
-   - Ensure TypeScript types are correct
-   - Test in both light/dark modes
-
-3. **Test thoroughly**
-   - Check responsive design (mobile, tablet, desktop)
-   - Verify both language versions
-   - Test theme switching
-   - Run `npm run build` to check for errors
-
-4. **Optimize performance**
-   - Use Next.js Image component for images
-   - Implement lazy loading where appropriate
-   - Minimize bundle size
-
-### Modifying Existing Components
-
-#### Header Component
-- Location: `components/Header.tsx`
-- Purpose: Navigation and language/theme toggles
-- Key features: Fixed positioning, responsive menu
-
-#### Hero Component
-- Location: `components/Hero.tsx`
-- Purpose: Landing section with greeting
-- Key features: Gradient text, call-to-action buttons
-
-#### About Component
-- Location: `components/About.tsx`
-- Purpose: Personal introduction with avatar
-- Key features: Avatar display, multi-line bio
-
-#### Skills Component
-- Location: `components/Skills.tsx`
-- Purpose: Display technical skills with icons
-- Key features: SVG icons, grid layout, hover effects
-
-#### Projects Component
-- Location: `components/Projects.tsx`
-- Purpose: Showcase featured project
-- Key features: Gradient background, GitHub link
-
-#### Contact Component
-- Location: `components/Contact.tsx`
-- Purpose: Display contact methods
-- Key features: Email, Twitter, GitHub links
-
-## Internationalization (i18n)
-
-### Adding New Translations
-
-Edit `contexts/LanguageContext.tsx`:
-
-```typescript
-const translations = {
-  en: {
-    newKey: 'English text',
-  },
-  zh: {
-    newKey: '中文文本',
-  },
-}
-```
-
-### Using Translations in Components
-
-```typescript
-import { useLanguage } from '@/contexts/LanguageContext'
-
-export default function MyComponent() {
-  const { t, language } = useLanguage()
-  
-  return <div>{t('newKey')}</div>
-}
-```
-
-### Translation Guidelines
-
-1. Keep keys descriptive and consistent
-2. Maintain parity between English and Chinese
-3. Use proper punctuation for each language
-4. Consider text length differences in layouts
-
-## Styling Guidelines
-
-### Tailwind CSS Best Practices
-
-1. **Use utility classes**: Prefer Tailwind utilities over custom CSS
-2. **Responsive design**: Use responsive prefixes (`md:`, `lg:`)
-3. **Dark mode**: Always provide dark mode variants (`dark:`)
-4. **Consistency**: Use consistent spacing and sizing
-
-### Color Palette
-
-- **Primary**: Blue (`blue-600`)
-- **Secondary**: Purple (`purple-600`)
-- **Accent**: Pink (`pink-600`)
-- **Neutral**: Gray shades
-- **Gradients**: Use `bg-gradient-to-r` with multiple colors
-
-### Common Patterns
-
-```tsx
-// Button
-<button className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
-
-// Card
-<div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
-
-// Gradient Text
-<span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-```
-
-## Performance Optimization
-
-### Core Web Vitals Checklist
-
-- ✅ Use Next.js Image component for images
-- ✅ Implement proper lazy loading
-- ✅ Minimize JavaScript bundle size
-- ✅ Use CSS animations over JavaScript
-- ✅ Optimize font loading
-- ✅ Implement proper caching headers
-
-### Image Optimization
-
-```tsx
-import Image from 'next/image'
-
-<Image
-  src="/avatar.jpg"
-  alt="Alien"
-  width={192}
-  height={192}
-  className="rounded-full"
-  priority // for above-the-fold images
-/>
-```
-
-### Code Splitting
-
-- Use dynamic imports for heavy components
-- Lazy load non-critical sections
-- Keep initial bundle size minimal
-
-## Accessibility Guidelines
-
-1. **Semantic HTML**: Use proper HTML elements
-2. **ARIA labels**: Add `aria-label` to icon buttons
-3. **Keyboard navigation**: Ensure all interactive elements are keyboard accessible
-4. **Color contrast**: Maintain WCAG AA standards
-5. **Focus indicators**: Visible focus states for all interactive elements
-
-## Testing Checklist
-
-Before deploying changes:
-
-- [ ] Test in Chrome, Firefox, Safari
-- [ ] Test on mobile devices (iOS, Android)
-- [ ] Verify both light and dark themes
-- [ ] Check both English and Chinese versions
-- [ ] Test all interactive elements
-- [ ] Verify responsive breakpoints
-- [ ] Run `npm run build` successfully
-- [ ] Check for console errors
-- [ ] Test all external links
-- [ ] Verify email/social links work
-
-## Common Tasks
-
-### Updating Personal Information
-
-1. **Name and Bio**: Edit `contexts/LanguageContext.tsx`
-2. **Avatar**: Replace `public/avatar.jpg`
-3. **Contact Info**: Update links in `components/Contact.tsx`
-4. **Social Links**: Modify URLs in Contact component
-
-### Adding a New Skill
-
-1. Open `components/Skills.tsx`
-2. Add new skill object with icon:
-
-```typescript
-{
-  name: 'New Skill',
-  icon: (
-    <svg viewBox="0 0 24 24" className="w-12 h-12" fill="#COLOR">
-      <path d="..." />
-    </svg>
-  )
-}
-```
-
-### Modifying the Project
-
-1. Open `components/Projects.tsx`
-2. Update project object:
-
-```typescript
-const project = {
-  title: 'Project Title',
-  titleZh: '项目标题',
-  description: 'English description',
-  descriptionZh: '中文描述',
-  tags: ['Tag1', 'Tag2'],
-  gradient: 'from-color-400 to-color-600',
-  github: 'https://github.com/username/repo',
-}
-```
-
-### Changing Theme Colors
-
-1. Update Tailwind classes in components
-2. Maintain consistency across all components
-3. Test in both light and dark modes
-
-## Deployment
-
-### Vercel Deployment
-
-1. Push code to GitHub
-2. Import repository in Vercel
-3. Configure build settings (auto-detected)
-4. Deploy
-
-### Environment Variables
-
-No environment variables required for basic deployment.
-
-### Build Commands
+## 本地验证清单
 
 ```bash
-# Development
-npm run dev
-
-# Production build
-npm run build
-
-# Start production server
-npm start
-
-# Lint code
-npm run lint
+cd ../cineView/cineview && pnpm install && pnpm build
+cd ../../portfolio && pnpm install && pnpm fetch && pnpm fonts && pnpm dev   # http://localhost:4000/portfolio/
 ```
 
-## Troubleshooting
-
-### Common Issues
-
-**Issue**: Build fails with TypeScript errors
-- **Solution**: Run `npm run build` locally and fix type errors
-
-**Issue**: Images not loading
-- **Solution**: Ensure images are in `public/` directory
-
-**Issue**: Translations not updating
-- **Solution**: Check `LanguageContext.tsx` for correct key names
-
-**Issue**: Dark mode not working
-- **Solution**: Verify `dark:` classes are applied and localStorage is accessible
-
-**Issue**: Responsive layout broken
-- **Solution**: Check responsive breakpoints (`md:`, `lg:`) in Tailwind classes
-
-## Best Practices Summary
-
-1. **Always test both languages** before committing
-2. **Maintain dark mode support** for all new features
-3. **Keep components small and focused**
-4. **Use TypeScript strictly** - no `any` types
-5. **Follow existing patterns** for consistency
-6. **Optimize for performance** - check bundle size
-7. **Write semantic HTML** for accessibility
-8. **Test on real devices** not just browser DevTools
-9. **Keep dependencies minimal** - avoid unnecessary packages
-10. **Document complex logic** with comments
-
-## Resources
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
-- [React Documentation](https://react.dev)
-- [Web.dev Performance](https://web.dev/performance/)
-
-## Maintenance
-
-### Regular Updates
-
-- Update dependencies monthly: `npm update`
-- Check for security vulnerabilities: `npm audit`
-- Review and update content quarterly
-- Monitor Core Web Vitals in production
-
-### Version Control
-
-- Use meaningful commit messages
-- Create feature branches for new features
-- Keep main branch stable and deployable
-- Tag releases with semantic versioning
+- `pnpm type-check && pnpm build && pnpm preview` → http://localhost:4173/portfolio/(Pages base 路径预演)
+- 双语切换全部文案翻转并持久化;`<html lang>` 同步
+- DevTools 模拟 prefers-reduced-motion:内容静态直达终态
+- 390px 视口走 750 稿变体,无横向溢出
+- console 无 cineview onError(重点 INVALID_COMPONENT_HIERARCHY / FIRST_SCENE_TIMEOUT)
 
 ---
 
-**Last Updated**: 2026
-**Maintained By**: Alien
-**Contact**: mu1hang@foxmail.com
+Last Updated: 2026-07 | Maintained By: Alien | Contact: mu1hang@foxmail.com

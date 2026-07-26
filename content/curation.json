@@ -1,0 +1,38 @@
+{
+  "$comment": "作品集精选配置：控制展示哪些仓库、顺序与文案。字段全部可选;description.zh 是主要抓手(GitHub 描述只有英文)。",
+  "exclude": ["AlienMu", "portfolio"],
+  "includeUnlisted": true,
+  "repos": {
+    "cineview": {
+      "order": 1,
+      "featured": true,
+      "title": { "zh": "银幕", "en": "CineView" },
+      "description": {
+        "zh": "为 React 打造的电影感整页叙事框架：滚动即运镜，一把设计尺换算所有布局。1200+ 测试守护，本站即样片。",
+        "en": "A cinematic full-page storytelling framework for React — scrolling is the camera. Guarded by 1200+ tests; this very site is the demo reel."
+      },
+      "tags": ["react", "framer-motion", "scroll-driven"],
+      "links": {}
+    },
+    "resume": {
+      "order": 2,
+      "title": { "zh": "出海", "en": "Resume" },
+      "description": {
+        "zh": "面向海外招聘的前端求职平台，连接开发者与远方的工作机会。",
+        "en": null
+      },
+      "accent": "#35507A",
+      "tags": ["frontend", "platform"]
+    },
+    "landding-page-pand-life": {
+      "order": 3,
+      "title": { "zh": "样片", "en": "Pand Life" },
+      "description": {
+        "zh": "CineView 框架的落地页样片：一组用滚动叙事讲产品故事的演示页。",
+        "en": "Demo landing pages for the CineView framework — product stories told through scroll."
+      },
+      "accent": "#4A6B50",
+      "tags": ["cineview", "landing-page"]
+    }
+  }
+}
