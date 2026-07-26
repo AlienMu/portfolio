@@ -62,10 +62,19 @@ export function HeroScene({ variant, reduced }: HeroSceneProps) {
           </Cue>
           <Cue
             off={reduced}
+            animateId="hero-sub"
+            enterAnimation="slide-up"
+            duration={{ enter: 420 }}
+            timeline={{ waitFor: 'hero-greeting', delay: 50 }}
+          >
+            <p className="hero-sub">{t('heroSub')}</p>
+          </Cue>
+          <Cue
+            off={reduced}
             animateId="hero-role"
             enterAnimation="fade-in"
             duration={{ enter: 400 }}
-            timeline={{ waitFor: 'hero-greeting', delay: 60 }}
+            timeline={{ waitFor: 'hero-sub', delay: 50 }}
           >
             <p className="hero-role mono">{t('role')}</p>
           </Cue>

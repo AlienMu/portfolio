@@ -111,9 +111,16 @@
   white-space: pre;
 }
 
+.hero-sub {
+  font-size: calc(var(--u) * 22);
+  line-height: 1.8;
+  color: var(--ink);
+  max-width: calc(var(--u) * 620);
+}
+
 .hero-role {
-  font-size: calc(var(--u) * 15);
-  letter-spacing: 0.22em;
+  font-size: calc(var(--u) * 14);
+  letter-spacing: 0.3em;
   color: var(--seal);
 }
 
@@ -143,6 +150,9 @@
 
 .marquee-track {
   display: flex;
+  /* 关键:宽度必须是内容宽(两段等宽拷贝),translateX(-50%) 才恰好
+     等于一段的宽度,循环无缝;否则按容器宽平移会产生跳变断流 */
+  width: max-content;
   white-space: nowrap;
   animation: marquee 30s linear infinite;
   font-size: max(calc(var(--u) * 12), 11px);
@@ -193,8 +203,13 @@
   font-size: min(calc(var(--u) * 74), 6vh);
 }
 
+[data-variant='mobile'] .hero-sub {
+  font-size: calc(var(--u) * 26);
+  max-width: none;
+}
+
 [data-variant='mobile'] .hero-role {
-  font-size: calc(var(--u) * 20);
+  font-size: calc(var(--u) * 19);
 }
 
 [data-variant='mobile'] .hero-marquee {
@@ -392,11 +407,6 @@
   letter-spacing: 0.24em;
 }
 
-.filmo-sub {
-  font-size: calc(var(--u) * 14);
-  letter-spacing: 0.14em;
-  color: var(--slate);
-}
 
 .filmo-body {
   display: flex;
@@ -428,6 +438,14 @@
 }
 
 .filmo-row {
+  /* 行是 button(点击选中),重置原生外观 */
+  appearance: none;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
   display: grid;
   grid-template-columns: calc(var(--u) * 64) 1fr auto calc(var(--u) * 50);
   align-items: center;
@@ -504,18 +522,46 @@
   display: flex;
   flex-direction: column;
   gap: min(calc(var(--u) * 22), 2.6vh);
-  animation: filmo-card-in 0.25s ease;
   max-width: calc(var(--u) * 380);
 }
 
-@keyframes filmo-card-in {
+/* 组合入场:卡片子元素带位移错峰浮起(标题→描述→元数据→按钮) */
+.filmo-card > * {
+  opacity: 0;
+  animation: card-item-in 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+.filmo-card > :nth-child(1) {
+  animation-delay: 0.02s;
+}
+
+.filmo-card > :nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.filmo-card > :nth-child(3) {
+  animation-delay: 0.18s;
+}
+
+.filmo-card > :nth-child(4) {
+  animation-delay: 0.26s;
+}
+
+@keyframes card-item-in {
   from {
     opacity: 0;
-    transform: translateY(calc(var(--u) * 10));
+    transform: translate(calc(var(--u) * 26), calc(var(--u) * 14));
   }
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filmo-card > * {
+    animation: none;
+    opacity: 1;
   }
 }
 
@@ -550,12 +596,6 @@
   gap: calc(var(--u) * 12);
 }
 
-.filmo-idle-text {
-  font-size: calc(var(--u) * 15);
-  line-height: 2;
-  color: var(--slate);
-  white-space: pre-line;
-}
 
 /* 个人作品 移动端 */
 [data-variant='mobile'] .filmo-layout {
@@ -571,9 +611,6 @@
   font-size: calc(var(--u) * 64);
 }
 
-[data-variant='mobile'] .filmo-sub {
-  font-size: calc(var(--u) * 19);
-}
 
 [data-variant='mobile'] .filmo-row {
   grid-template-columns: 1fr auto;

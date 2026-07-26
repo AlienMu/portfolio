@@ -46,18 +46,16 @@ function RevealSync({
 
 /**
  * 个人作品:center-lock 截流滚动,列表逐行展开;
- * 展开期间右侧详情跟随当前登场的行联动(hover 关闭),
- * 全部展开后交还给 hover:移入高亮 + 详情切换,点击进入仓库。
+ * 展开期间右侧详情跟随当前登场的行联动;
+ * 全部展开后改为点击选中(选中持久,不随指针来回跳),进入仓库走详情面板。
  */
 export function FilmographyScene({ projects, variant, reduced }: FilmographySceneProps) {
   const { language, t } = useLanguage();
   const zh = language === 'zh';
-  const [hovered, setHovered] = useState<number | null>(null);
-  const [autoIdx, setAutoIdx] = useState<number | null>(reduced ? projects.length - 1 : null);
+  const [selected, setSelected] = useState<number | null>(reduced ? 0 : null);
   const [revealDone, setRevealDone] = useState(reduced);
 
-  // 联动规则:展开中面板跟随 autoIdx;展开完毕后 hover 优先,无 hover 停在最后联动到的行
-  const activeIdx = revealDone ? (hovered ?? autoIdx) : autoIdx;
+  const activeIdx = selected;
   const active = activeIdx === null ? null : projects[activeIdx];
 
   const rowTitle = (p: Project) => (zh ? (p.title.zh ?? p.name) : (p.title.en ?? p.name));
@@ -72,12 +70,11 @@ export function FilmographyScene({ projects, variant, reduced }: FilmographyScen
         <Cue off={reduced} animateId="filmo-head" enterAnimation="slide-up" duration={{ enter: 380 }}>
           <header className="filmo-head">
             <h2 className="display filmo-title-main">{t('worksTitle')}</h2>
-            <p className="filmo-sub mono">{t('worksSub')}</p>
           </header>
         </Cue>
 
         <div className="filmo-body">
-          <ul className="filmo-list" onMouseLeave={() => setHovered(null)}>
+          <ul className="filmo-list">
             {projects.map((p, i) => (
               <Cue
                 key={p.name}
@@ -96,14 +93,14 @@ export function FilmographyScene({ projects, variant, reduced }: FilmographyScen
                       opacity: 0.2 + 0.8 * enterProgress,
                     }}
                   >
-                    {!reduced && (
+                    {!reduced && !revealDone && (
                       <RevealSync
                         index={i}
                         progress={enterProgress}
                         isLast={i === projects.length - 1}
-                        onActive={(idx) => setAutoIdx((cur) => (cur === null || idx > cur ? idx : cur))}
+                        onActive={(idx) => setSelected((cur) => (cur === null || idx > cur ? idx : cur))}
                         onRetreat={(idx) =>
-                          setAutoIdx((cur) => (cur === idx ? (idx > 0 ? idx - 1 : null) : cur))
+                          setSelected((cur) => (cur === idx ? (idx > 0 ? idx - 1 : null) : cur))
                         }
                         onDone={setRevealDone}
                       />
@@ -118,15 +115,12 @@ export function FilmographyScene({ projects, variant, reduced }: FilmographyScen
                       }}
                       aria-hidden="true"
                     />
-                    <a
+                    <button
+                      type="button"
                       className="filmo-row"
                       data-active={activeIdx === i}
-                      href={p.htmlUrl}
-                      target="_blank"
-                      rel="noreferrer"
                       style={{ ['--row-accent' as string]: p.accent ?? 'var(--seal)' }}
-                      onMouseEnter={() => revealDone && setHovered(i)}
-                      onFocus={() => revealDone && setHovered(i)}
+                      onClick={() => revealDone && setSelected(i)}
                     >
                       <span className="filmo-no mono">{String(i + 1).padStart(2, '0')}</span>
                       <span className="filmo-names">
@@ -139,7 +133,7 @@ export function FilmographyScene({ projects, variant, reduced }: FilmographyScen
                       <span className="filmo-arrow mono" aria-hidden="true">
                         →
                       </span>
-                    </a>
+                    </button>
                     {variant === 'mobile' && rowDesc(p) && (
                       <p className="filmo-mobile-desc">{rowDesc(p)}</p>
                     )}
@@ -184,11 +178,7 @@ export function FilmographyScene({ projects, variant, reduced }: FilmographyScen
                     )}
                   </div>
                 </div>
-              ) : (
-                <div className="filmo-card filmo-card-idle">
-                  <p className="filmo-idle-text">{t('worksIdle')}</p>
-                </div>
-              )}
+              ) : null}
             </aside>
           )}
         </div>

@@ -14,14 +14,13 @@ interface LanguageContextType {
 const translations = {
   en: {
     greeting: "Hi, I'm Alien",
-    role: 'Frontend engineer · Author of CineView',
+    heroSub: 'I write frontend — and build the framework under it. Pretty, and fast.',
+    role: 'FRONTEND ENGINEER · CINEVIEW AUTHOR',
     avatarCaption: 'ALIEN MU',
     marquee: 'PERSONAL WORKS · ALIEN MU · FRONTEND ENGINEER · BUILT WITH CINEVIEW · ',
     scrollHint: 'Scroll',
     interestsTitle: 'HOBBIES & SKILLS',
     worksTitle: 'WORKS',
-    worksSub: 'Scroll to unfold · hover to preview · click to open',
-    worksIdle: 'Point at any row —\nits details unfold here.',
     siteTitle: 'THIS SITE',
     siteLead:
       'This site is a work too — it runs on CineView, the React framework I built myself. The scroll-locking and row-by-row reveals you just used are all it.',
@@ -38,14 +37,13 @@ const translations = {
   },
   zh: {
     greeting: '你好，我是 Alien',
-    role: '前端工程师 · 自研框架 CineView 作者',
+    heroSub: '写前端，也造框架——东西要好看，更要够快。',
+    role: 'FRONTEND ENGINEER · CINEVIEW AUTHOR',
     avatarCaption: 'ALIEN MU',
     marquee: '个人作品 · ALIEN MU · 前端工程师 · 自研框架 CINEVIEW · ',
     scrollHint: '向下滚动',
     interestsTitle: '爱好与技能',
     worksTitle: '个人作品',
-    worksSub: '滚动逐行展开 · 移入预览 · 点击进入',
-    worksIdle: '把指针移到任意一行，\n这里会展开它的详情。',
     siteTitle: '本站',
     siteLead:
       '这个网站本身也是作品——它跑在我自研的 React 框架 CineView 上，你刚刚经过的滚动锁定、逐行登场，都由它驱动。',
