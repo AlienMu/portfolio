@@ -1,59 +1,38 @@
 ---
 title: Portfolio Development Guide
-description: Conventions for the CineView-powered portfolio (Vite + React SPA)
+description: Conventions for the CineView 2 personal page (plain HTML + Vite)
 inclusion: auto
-tags: [portfolio, cineview, vite, react, guidelines]
+tags: [portfolio, cineview, vite]
 ---
 
 # Portfolio Development Guide
 
-本站是"中文电影海报"风格的个人作品集,整页跑在自研框架 **CineView**(github.com/AlienMu/cineView)上——网站本身就是框架的样片。
+介绍 Alien 本人的个人主页。CineView 是重点作品之一，不是主角。整页用 CineView 2（npm `cineview`，`cv-*` 自定义元素）搭成。
 
-## 技术栈(2026-07 重写后)
+## 技术栈（2026-10 重做后）
 
-- **构建**: Vite 5 + React 18 + TypeScript(严格模式),SPA,无 SSR
-- **框架**: `cineview`(本地 link 依赖)+ framer-motion peer
-- **样式**: 手写 CSS(`src/styles/`),无 Tailwind;设计 token 见 global.css `:root`
-- **部署**: GitHub Pages,`.github/workflows/deploy.yml`(push + 每日 cron 自动采集重建)
+- 纯 HTML + Vite 5 + TypeScript；没有 React，也没有框架组件
+- `cineview@2.0.1`，从 npm 装，版本写死；开发时 Vite 把 `cineview` 指到 `cineview/dev`（会打印写法错误）
+- 样式：手写 CSS，`src/styles/main.css`，第一行 `@import 'cineview/cineview.css'`
+- 部署：Cloudflare Pages（项目 `alien-portfolio`，域名 alienmmm.com），本地 `pnpm deploy` 构建并用 wrangler 上传；没有 CI
 
-## 铁律
+## 规则
 
-1. **cineview 构建顺序**:依赖是 `link:../cineView/cineview`,指向其 `dist/`。首次开发或框架更新后必须先 `cd ../cineView/cineview && pnpm build`,再回来 `pnpm dev`(改框架后需重启 vite)。
-2. **只用 scroll 纵向模式**:`mode="scroll"` + `direction:'y'`。drag 模式(无滚轮支持)与横向 scroll(已知损坏)禁用。
-3. **单一亮色方案**:纸 `#F6F4EF` / 墨 `#1F1D1A` / 朱 `#BE3B2A` / 黛 `#5A5E66` / 线 `#D8D4CB`。不做暗色模式,不加 `dark:` 逻辑。
-4. **单标尺布局**:所有长度用 `calc(var(--u) * 设计px)`;桌面稿 1440、移动稿 750,断点切换靠 `App.tsx` 的 `key={variant}` 重挂载。
-5. **竖排只给汉字**:`writing-mode: vertical-rl` 仅用于中文展示型文字;latin(仓库名、URL)一律横排等宽。
-6. **render-prop 擦洗动画必须给 `enterAnimation`(可用 `SOLID`)+ `duration`**,否则时间轴零长度、`enterProgress` 恒 0。
-7. **sceneId/zoneId 派生自仓库名**,fetch 脚本已断言唯一;重复 id 会静默毁掉滚动区。
-8. **reduced-motion**:所有动画经 `<Cue off={reduced}>` 包装,新动画同样要走 Cue。
-9. **背景覆盖 hack**:cineview 滚动根内联白底被 `[data-cineview-container] { background: var(--paper) !important }` 覆盖,升级框架后复查。
-10. **中文文案用全角标点**(,:),英文用半角;双语 key 加进 `src/i18n/LanguageContext.tsx` 时保持 en/zh 对齐。
+1. **暗金配色**：底色 `#0F0E0D`、金色 `#BD9661`（高光 `#E7C399`）、正文 `#EDE6DC`、次要文字 `#A39A8E`。深金 `#896B48` 对比度只有 3.9:1，只能用来画线。
+2. **字体**：英文 Barlow、中文思源黑体，常规和粗体两档；mono 用 IBM Plex Mono。全部自己托管，不引入字体 CDN。改了文案后跑 `pnpm fonts`。
+3. **单位**：`--u` 是 1920 宽稿子上的 1 像素，按视口缩放，最大到 1920px；手机（≤760px）改成 750 宽的稿子。
+4. **双语**：每段文字写成成对的 `<span lang="zh-CN">` 和 `<span lang="en">`。图片 alt 和 aria-label 用 `data-alt-zh/en`、`data-label-zh/en`。
+5. **锁定区长度**：第 3 幕 1px 滚动 = 1ms，最晚结束的元素决定长度（现在是 4300）。改了时间就同步改 CSS 里的 `#road { height: calc(4300px + 100svh) }`。
+6. **比屏幕高的块**用 `on="enter(partial)"`，否则要整块进入视口才会播放，在矮屏幕上永远不出现。
+7. **grid 里的 `cv-animate`** 要加 `min-width: 0`，否则内容会撑破列宽。
+8. **路径**：素材用相对路径 `media/...`，不写死根路径，换部署位置时不用改。
 
-## 数据工作流
+## 验证
 
-- **项目数据自动采集**:`pnpm fetch` → `scripts/fetch-repos.mjs` 拉 GitHub API(AlienMu 公开仓库),与 `content/curation.json` 合并 → `src/data/projects.json`(提交进 git,本地开发离线可用)。
-- **策展**:改 `content/curation.json`(顺序、中文片名/描述、accent 色、截图、demo 链接),再跑 `pnpm fetch`。
-- **CI 每日重建**:workflow 用内置 GITHUB_TOKEN 重新 fetch,新仓库最多滞后一天上线。
-
-## 字体工作流
-
-- 源字体(完整 TTF)提交在 `fonts/`;`pnpm fonts` → `scripts/subset-fonts.mjs` 扫描 src/ + content/ 全部字符,按 glyph 子集化产出 `src/assets/fonts/*.woff2`(约 70/55/8 KB)。
-- 新增中文文案后重跑 `pnpm fonts`,否则新字形会回退到系统宋体。
-- 全部自托管,禁止引入字体 CDN(大陆访客)。
-
-## 本地验证清单
-
-```bash
-cd ../cineView/cineview && pnpm install && pnpm build
-cd ../../portfolio && pnpm install && pnpm fetch && pnpm fonts && pnpm dev   # http://localhost:4000/portfolio/
-```
-
-- `pnpm type-check && pnpm build && pnpm preview` → http://localhost:4173/portfolio/(Pages base 路径预演)
-- 双语切换全部文案翻转并持久化;`<html lang>` 同步
-- DevTools 模拟 prefers-reduced-motion:内容静态直达终态
-- 390px 视口走 750 稿变体,无横向溢出
-- console 无 cineview onError(重点 INVALID_COMPONENT_HIERARCHY / FIRST_SCENE_TIMEOUT)
+- `pnpm type-check && pnpm build && pnpm preview`
+- 在 Chrome 和 WebKit 里看五种视口（1920×1080、1440×900、1280×720、820×1180、390×844）：没有 `cv-error`，没有横向滚动条
+- 中英文切换；开启减弱动态效果；在第 3 幕中间刷新页面
 
 ---
 
-Last Updated: 2026-07 | Maintained By: Alien | Contact: mu1hang@foxmail.com
+Last Updated: 2026-10 | Maintained By: Alien | Contact: mu1hang@foxmail.com

@@ -1,48 +1,44 @@
-# Alien · 作品集 — Works
+# Alien · 个人主页
 
-海报风格的个人页,同时是自研框架 [CineView](https://github.com/AlienMu/cineView) 的现场演示:自我介绍开场(逐字问候 + 头像相框),**个人作品**列表随滚动截流逐行展开(悬停高亮 + 右侧详情),「本站」一页现场播放框架动画预设,联系页收尾。纸墨朱三色、宋体大字、底纹汉字与纸纹质感。
+介绍我自己的一页：开场是我骑车的照片和一句话，然后是关于我、一段跟着滚动往前开的骑行视频、作品（CineView 为主）和联系方式。整页用我写的框架 [CineView 2](https://github.com/AlienMu/cineview) 搭成。暗色底，金色取自照片里车灯网罩的黄铜色。
 
-A poster-style personal page that doubles as a live demo of my self-built framework **CineView**: a self-introduction opening (per-character greeting + pinned avatar card), a scroll-locked **works list** that unfolds row by row (hover to preview), a page about this site with live animation presets, and a contact finale.
+My personal page: who I am, a ride you scroll through, my works (CineView first), and where to find me. Built with my own framework, CineView 2.
 
-**Live**: https://alienmu.github.io/portfolio/
+**Live**: https://alienmmm.com
 
-## 特性
+## 结构
 
-- **自动采集 GitHub 项目**:构建时拉取公开仓库,与 `content/curation.json` 精选配置合并;GitHub Actions 每日重建,新项目自动上片
-- **自研框架驱动**:CineView scroll 模式,center-lock 滚动区驱动海报分镜动画
-- **中英双语**:轻量 context,localStorage 持久化
-- **字体子集化**:思源宋体 14MB → ~75KB,按站点实际字符 glyph 级裁剪,全自托管
-- **可访问性**:prefers-reduced-motion 降级为静态海报;键盘可达,焦点可见
+| 幕 | 内容 | 做法 |
+| --- | --- | --- |
+| 01 开场 | 骑车照 + 问候 + GitHub / X | 照片从暗处亮起，名字逐行升起；被下一幕盖住时变暗（`stack covered="dim"`） |
+| 02 关于我 | 三句自我介绍 + 技能 | 背景等高线逐笔画出（`fx="draw"`） |
+| 03 路上 | 骑行视频 + 三个爱好 + 雪山和合影 | 锁定区：画面停住，滚动推着视频逐帧前进、倒退（`zone` + `cv-video`），4300 px |
+| 04 作品 | CineView + Resume + Mowen | 数字滚动（`fx="count"`）、截图依次升起 |
+| 05 关注 | GitHub / X / Telegram / 邮箱 | |
 
 ## 本地开发
 
-依赖 cineView 仓库以**平级目录**存在(pnpm `link:` 依赖):
-
-```
-workspace/
-├── cineView/cineview   # 框架(需先构建)
-└── portfolio           # 本站
-```
-
 ```bash
-# 1. 构建框架(首次 & 框架更新后)
-cd cineView/cineview && pnpm install && pnpm build
-
-# 2. 启动本站
-cd ../../portfolio
 pnpm install
-pnpm fetch        # 可选:刷新 GitHub 项目数据(已提交离线副本)
-pnpm fonts        # 可选:重新子集化字体(改文案后)
-pnpm dev          # http://localhost:4000/portfolio/
+pnpm dev        # http://localhost:4000/ ，开发时用 cineview/dev，写错的属性会在控制台报出来
+pnpm fonts      # 改了文案后重新子集化字体
+pnpm type-check && pnpm build && pnpm preview   # http://localhost:4173/
 ```
 
-## 策展
-
-改 `content/curation.json`(展示顺序、中文片名/描述、印章配色、demo 链接),然后 `pnpm fetch`。不想展示的仓库加进 `exclude`。
+- 页面就是 `index.html`，样式在 `src/styles/main.css`，脚本 `src/main.ts` 只管语言切换和顶栏。
+- 中英文都写在标记里（成对的 `<span lang>`），按 `<html lang>` 显示其中一种，切换语言不会重建舞台。
+- 素材在 `public/media/`。原片（照片、视频）不进仓库；视频要每帧都是关键帧才能随滚动倒退：
+  `ffmpeg -ss 8 -t 12 -i 原片.mp4 -an -vf "crop=1600:900:160:0,scale=1280:720,fps=25" -c:v libx264 -pix_fmt yuv420p -g 1 -crf 35 -preset slow -movflags +faststart public/media/road.mp4`
 
 ## 部署
 
-push 到 `main` 或每日定时,GitHub Actions 自动:checkout 两仓库 → 构建 cineview → fetch 项目数据 → 子集化字体 → 构建 → 发布 GitHub Pages。仓库 Settings → Pages → Source 需设为 **GitHub Actions**。
+部署在 Cloudflare Pages（项目名 `alien-portfolio`，域名 alienmmm.com），和 CineView 官网一样在本地构建后上传：
+
+```bash
+pnpm deploy     # 类型检查、构建，再用 wrangler 上传 dist/
+```
+
+第一次用要先 `npx wrangler login`。没有定时任务，也不抓取 GitHub 数据：内容都写在页面里，改完运行一次 `pnpm deploy` 就是发布。
 
 ## License
 

@@ -1,22 +1,303 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Alien · 作品集 — Works</title>
-    <meta name="description" content="Alien 的前端作品集:自研电影感框架 CineView 与精选项目,整站即一场放映。Frontend works by Alien, screened with the self-built CineView framework." />
-    <meta name="theme-color" content="#F6F4EF" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Alien · 写前端，也造框架</title>
+    <meta name="description" content="Alien，前端开发者，CineView 作者。写前端，也造框架；东西要好看，更要够快。" />
+    <meta name="theme-color" content="#0f0e0d" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Alien · 作品集 — Works" />
-    <meta property="og:description" content="自研电影感框架 CineView 与精选项目,整站即一场放映。" />
-    <meta property="og:url" content="https://alienmu.github.io/portfolio/" />
-    <meta property="og:image" content="https://alienmu.github.io/portfolio/avatar.jpg" />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:title" content="Alien · 写前端，也造框架" />
+    <meta property="og:description" content="前端开发者，CineView 作者。写前端，也造框架；东西要好看，更要够快。" />
+    <meta property="og:url" content="https://alienmmm.com/" />
+    <link rel="canonical" href="https://alienmmm.com/" />
+    <meta property="og:image" content="https://alienmmm.com/media/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@AlienMu777" />
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23BE3B2A'/%3E%3Ctext x='16' y='23' font-size='20' font-family='serif' font-weight='900' fill='%23F6F4EF' text-anchor='middle'%3E映%3C/text%3E%3C/svg%3E" />
+    <meta name="twitter:creator" content="@AlienMu777" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <script>
+      // CineView 2 head snippet (node_modules/cineview/dist/head.js): .cv-js once the browser meets
+      // the baseline, so cineview.css sets the first screen before the module runs.
+      (function(s){if(s&&s('selector(:has(*))')&&s('width:1lh')&&s('color:color-mix(in srgb,red,red)'))document.documentElement.classList.add('cv-js')})(window.CSS&&CSS.supports);
+      // Language before first paint: ?lang= > stored choice > browser language.
+      (function () {
+        var lang = 'zh';
+        try {
+          var asked = new URLSearchParams(location.search).get('lang');
+          var kept = localStorage.getItem('alien-lang');
+          if (asked === 'zh' || asked === 'en') lang = asked;
+          else if (kept === 'zh' || kept === 'en') lang = kept;
+          else if (!/^zh\b/i.test(navigator.language || '')) lang = 'en';
+        } catch (e) {}
+        document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      })();
+    </script>
+    <link rel="preload" as="image" type="image/webp" imagesrcset="media/hero-800.webp 800w, media/hero.webp 1532w" imagesizes="(max-width: 760px) 100vw, 56vw" />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <script type="module" src="/src/main.ts"></script>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <a class="skip" href="#works"><span lang="zh-CN">跳到作品</span><span lang="en">Skip to works</span></a>
+
+    <header class="bar">
+      <a class="brand" href="#top" aria-label="Alien">
+        <img src="media/avatar-160.jpg" alt="" width="32" height="32" />
+        <span>Alien</span>
+      </a>
+      <nav class="bar-nav" aria-label="页面" data-label-zh="页面" data-label-en="Sections">
+        <a href="#about"><span lang="zh-CN">关于</span><span lang="en">About</span></a>
+        <a href="#road"><span lang="zh-CN">路上</span><span lang="en">Road</span></a>
+        <a href="#works"><span lang="zh-CN">作品</span><span lang="en">Works</span></a>
+        <a href="#follow"><span lang="zh-CN">关注</span><span lang="en">Follow</span></a>
+      </nav>
+      <div class="langs" role="group" aria-label="Language / 语言">
+        <button type="button" data-set-lang="zh" lang="zh-CN">中文</button>
+        <button type="button" data-set-lang="en" lang="en">EN</button>
+      </div>
+    </header>
+
+    <cv-stage id="top" design-width="2560">
+      <!-- 01 开场：照片贴左边上下顶满，名字在右；第二幕盖上来时变暗 -->
+      <cv-scene id="hello" class="act act-hello" stack covered="dim" preload>
+        <section class="hello" aria-labelledby="hello-title">
+          <cv-animate class="hello-photo" from="opacity:0; scale:1.06" to="opacity:1; scale:1" duration="1600" ease="settle">
+            <img
+              src="media/hero.webp"
+              srcset="media/hero-800.webp 800w, media/hero.webp 1532w"
+              sizes="(max-width: 760px) 100vw, 56vw"
+              width="1532" height="1519"
+              alt="骑着复古街车的 Alien，戴哑光黑全盔、穿卡其色外套" data-alt-zh="骑着复古街车的 Alien，戴哑光黑全盔、穿卡其色外套" data-alt-en="Alien on a retro street bike, matte black helmet and khaki jacket"
+              fetchpriority="high"
+            />
+          </cv-animate>
+          <div class="hello-copy">
+            <cv-animate class="hello-rule" from="scale-x:0" to="scale-x:1" duration="900" delay="300" ease="pan"><span></span></cv-animate>
+            <h1 class="hello-title" id="hello-title">
+              <span class="clip"><cv-animate name="hi" fx="rise(line)" duration="900" delay="450"><span class="hi" lang="zh-CN">你好，我是</span><span class="hi" lang="en">Hi, I'm</span></cv-animate></span>
+              <span class="clip"><cv-animate name="name" fx="rise(line)" duration="950" after="hi -650"><span class="name">Alien</span></cv-animate></span>
+            </h1>
+            <cv-animate name="line" fx="rise(soft)" duration="700" after="name -350">
+              <p class="hello-line">
+                <span lang="zh-CN">写前端，也造框架。<br />东西要好看，更要够快。</span>
+                <span lang="en">I write frontend, and build the framework under it.<br />Good-looking, and above all, fast.</span>
+              </p>
+            </cv-animate>
+            <cv-animate class="hello-actions" fx="rise(soft)" duration="600" after="line -250" target=".btn" stagger="110">
+              <div class="actions">
+                <a class="btn btn-gold" href="https://github.com/AlienMu" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
+                <a class="btn btn-line" href="https://x.com/AlienMu777" target="_blank" rel="noopener">X / Twitter <span aria-hidden="true">↗</span></a>
+              </div>
+            </cv-animate>
+            <cv-animate fx="fade" duration="600" after="line +200"><p class="hello-role mono">FRONTEND ENGINEER · CINEVIEW AUTHOR</p></cv-animate>
+          </div>
+          <a class="scroll-cue mono" href="#about" aria-label="向下" data-label-zh="向下" data-label-en="Scroll down"><span aria-hidden="true">↓</span></a>
+        </section>
+      </cv-scene>
+
+      <!-- 02 关于我：三句自我介绍 + 技能；背景是逐笔画出的等高线 -->
+      <cv-scene id="about" class="act act-about">
+        <section class="about" aria-labelledby="about-title">
+          <cv-animate class="about-map" fx="draw" on="enter(partial)" target="path" stagger="90" duration="1800">
+            <!-- include:contours.svg -->
+          </cv-animate>
+          <div class="about-main">
+            <cv-animate fx="fade" duration="500"><p class="kicker mono"><span lang="zh-CN">关于我</span><span lang="en">About</span></p></cv-animate>
+            <h2 class="about-title" id="about-title">
+              <span class="clip"><cv-animate fx="rise(line)" duration="900" delay="120"><span><span lang="zh-CN">喜欢敲前端代码，</span><span lang="en">I write frontend</span></span></cv-animate></span>
+              <span class="clip"><cv-animate fx="rise(line)" duration="900" delay="260"><span><span lang="zh-CN">玩转各种现代 <em>Web</em> 技术。</span><span lang="en">for a living, and <em>for fun</em>.</span></span></cv-animate></span>
+            </h2>
+            <cv-animate fx="rise(soft)" duration="700" delay="520">
+              <div class="about-text">
+                <p><span lang="zh-CN">专注把页面做得流畅好看、性能在线。</span><span lang="en">Smooth, good-looking pages, with performance that holds up.</span></p>
+                <p><span lang="zh-CN">写代码有热爱，过日子有自由。</span><span lang="en">Code with passion, live free.</span></p>
+              </div>
+            </cv-animate>
+          </div>
+          <cv-animate class="skills" fx="rise(soft)" on="enter(partial)" duration="600" delay="300" target=".skill" stagger="110">
+            <dl class="skill-list">
+              <div class="skill"><dt><span lang="zh-CN">框架</span><span lang="en">Frameworks</span></dt><dd>React · Vue · Nuxt · Web Components</dd></div>
+              <div class="skill"><dt><span lang="zh-CN">语言</span><span lang="en">Languages</span></dt><dd>TypeScript · Node.js</dd></div>
+              <div class="skill"><dt><span lang="zh-CN">工程</span><span lang="en">Tooling</span></dt><dd>Vite · Pinia · Framer Motion</dd></div>
+              <div class="skill"><dt><span lang="zh-CN">专长</span><span lang="en">Focus</span></dt><dd><span lang="zh-CN">性能优化 · 前端架构 · 交互动效</span><span lang="en">Performance · Architecture · Motion</span></dd></div>
+            </dl>
+          </cv-animate>
+        </section>
+      </cv-scene>
+
+      <!-- 03 路上：画面停住，滚动推着视频往前开（1 px 滚动 = 1 ms 时间线）；爱好像路牌一样经过，最后落在雪山和合影上 -->
+      <cv-scene id="road" class="act act-road" zone stack covered="dim">
+        <section class="road" aria-labelledby="road-title">
+          <cv-video class="road-video" src="media/road.mp4" poster="media/road-poster.webp" duration="3000" ease="linear"
+                    aria-label="第一人称骑行视频：山路弯道，前面是一队摩托车"
+                    data-label-zh="第一人称骑行视频：山路弯道，前面是一队摩托车" data-label-en="First-person riding video: a mountain road, a group of motorcycles ahead"></cv-video>
+          <div class="road-shade" aria-hidden="true"></div>
+          <cv-animate class="road-intro" fx="keyframes(road-intro-out)" duration="700" ease="linear">
+            <div class="road-intro-inner">
+              <p class="kicker mono"><span lang="zh-CN">路上</span><span lang="en">On the road</span></p>
+              <h2 class="road-title" id="road-title"><span lang="zh-CN">不写代码的时候</span><span lang="en">When I'm not coding</span></h2>
+              <p class="road-hint mono"><span lang="zh-CN">往下滚，跟上前面的车队 ↓</span><span lang="en">Scroll to catch up with the group ↓</span></p>
+            </div>
+          </cv-animate>
+          <cv-animate class="road-sign sign-1" fx="keyframes(road-sign)" delay="450" duration="850" ease="linear">
+            <p class="sign"><span class="sign-no mono">01</span><span class="sign-word"><span lang="zh-CN">听歌</span><span lang="en">Music</span></span><span class="sign-note"><span lang="zh-CN">耳机不离身</span><span lang="en">headphones always on</span></span></p>
+          </cv-animate>
+          <cv-animate class="road-sign sign-2" fx="keyframes(road-sign)" delay="1300" duration="850" ease="linear">
+            <p class="sign"><span class="sign-no mono">02</span><span class="sign-word"><span lang="zh-CN">骑摩托</span><span lang="en">Riding</span></span><span class="sign-note"><span lang="zh-CN">和车友往山里跑</span><span lang="en">into the mountains with friends</span></span></p>
+          </cv-animate>
+          <cv-animate class="road-sign sign-3" fx="keyframes(road-sign)" delay="2150" duration="850" ease="linear">
+            <p class="sign"><span class="sign-no mono">03</span><span class="sign-word"><span lang="zh-CN">旅行</span><span lang="en">Travel</span></span><span class="sign-note"><span lang="zh-CN">到处溜达</span><span lang="en">wherever the road goes</span></span></p>
+          </cv-animate>
+          <cv-animate class="road-progress" from="scale-x:0" to="scale-x:1" duration="3000" ease="linear"><span></span></cv-animate>
+          <cv-animate class="road-dim" from="opacity:0" to="opacity:1" delay="2850" duration="450" ease="linear"><span></span></cv-animate>
+          <div class="road-end">
+            <cv-animate class="road-snow" fx="wipe(center)" delay="3050" duration="700">
+              <img src="media/snow.webp" width="1040" height="1080" loading="lazy" decoding="async"
+                   alt="云层下的雪山和山谷" data-alt-zh="云层下的雪山和山谷" data-alt-en="Snow peaks and a valley under heavy clouds" />
+            </cv-animate>
+            <cv-animate class="road-group" fx="rise(strong)" delay="3350" duration="650">
+              <figure>
+                <img src="media/group.webp" width="800" height="591" loading="lazy" decoding="async"
+                     alt="五位骑手背对镜头，坐在摩托车上手拉着手，面朝雪山" data-alt-zh="五位骑手背对镜头，坐在摩托车上手拉着手，面朝雪山" data-alt-en="Five riders on their motorcycles, backs to the camera, holding hands toward the snow peaks" />
+                <figcaption class="mono"><span lang="zh-CN">2022 年 10 月 · 和车友们</span><span lang="en">October 2022 · with the crew</span></figcaption>
+              </figure>
+            </cv-animate>
+            <cv-animate class="road-outro" fx="rise(soft)" delay="3650" duration="650">
+              <p><span lang="zh-CN">骑够了，就回来接着写代码。</span><span lang="en">When the ride's over, back to the code.</span></p>
+            </cv-animate>
+          </div>
+        </section>
+      </cv-scene>
+
+      <!-- 04 作品：CineView 主打（刚才那段路就是它放的），另两个小条目 -->
+      <cv-scene id="works" class="act act-works">
+        <section class="works" aria-labelledby="works-title">
+          <header class="works-head">
+            <cv-animate fx="fade" duration="500"><p class="kicker mono"><span lang="zh-CN">作品</span><span lang="en">Works</span></p></cv-animate>
+            <h2 class="works-title" id="works-title">
+              <span class="clip"><cv-animate fx="rise(line)" duration="900" delay="100"><span><span lang="zh-CN">刚才那段山路，</span><span lang="en">That ride you just scrolled</span></span></cv-animate></span>
+              <span class="clip"><cv-animate fx="rise(line)" duration="900" delay="240"><span><span lang="zh-CN">就是用 <em>CineView</em> 做的。</span><span lang="en">was built with <em>CineView</em>.</span></span></cv-animate></span>
+            </h2>
+          </header>
+
+          <article class="cv" aria-labelledby="cv-name">
+            <div class="cv-copy">
+              <cv-animate fx="rise(soft)" duration="700">
+                <div>
+                  <h3 class="cv-name" id="cv-name">CineView <span class="cv-version mono">v2.0.1</span></h3>
+                  <p class="cv-lead">
+                    <span lang="zh-CN">我写的落地页框架。页面就是普通 HTML 加几个自定义元素：分成几幕，每幕一条时间线，读者往下滚，时间线就往前走。没有运行时依赖，还附带一套给 AI 用的设计技能，让它先和你定好分镜，再动手写页面。</span>
+                    <span lang="en">A landing-page framework I wrote. Pages are plain HTML plus a few custom elements: split into scenes, each with a timeline that moves as the reader scrolls. No runtime dependencies, and a design skill that has an AI plan the storyboard with you before it writes the page.</span>
+                  </p>
+                </div>
+              </cv-animate>
+              <cv-animate class="cv-facts" fx="rise(soft)" duration="600" delay="150" target=".fact" stagger="100">
+                <dl class="facts">
+                  <div class="fact"><dt><cv-animate fx="count" duration="1100"><span class="fact-num">7</span></cv-animate></dt><dd><span lang="zh-CN">个自定义元素</span><span lang="en">custom elements</span></dd></div>
+                  <div class="fact"><dt><span class="fact-num">0</span></dt><dd><span lang="zh-CN">个运行时依赖</span><span lang="en">runtime dependencies</span></dd></div>
+                  <div class="fact"><dt><cv-animate fx="count" duration="1100"><span class="fact-num">41</span></cv-animate></dt><dd><span lang="zh-CN">条设计参考</span><span lang="en">design references</span></dd></div>
+                  <div class="fact"><dt><cv-animate fx="count" duration="1100"><span class="fact-num">90%</span></cv-animate></dt><dd><span lang="zh-CN">行覆盖率</span><span lang="en">line coverage</span></dd></div>
+                </dl>
+              </cv-animate>
+              <cv-animate fx="rise(soft)" duration="600" delay="250">
+                <figure class="code">
+                  <figcaption class="mono"><span lang="zh-CN">那段山路的写法（节选）</span><span lang="en">How that ride is written (abridged)</span></figcaption>
+                  <pre><code><span class="t">&lt;cv-scene</span> <span class="a">zone</span><span class="t">&gt;</span>
+  <span class="t">&lt;cv-video</span> <span class="a">src</span>=<span class="s">"road.mp4"</span> <span class="a">duration</span>=<span class="s">"3000"</span><span class="t">&gt;&lt;/cv-video&gt;</span>
+  <span class="t">&lt;cv-animate</span> <span class="a">delay</span>=<span class="s">"450"</span> <span class="a">duration</span>=<span class="s">"850"</span><span class="t">&gt;</span>
+    <span class="t">&lt;p&gt;</span>听歌<span class="t">&lt;/p&gt;</span>
+  <span class="t">&lt;/cv-animate&gt;</span>
+<span class="t">&lt;/cv-scene&gt;</span></code></pre>
+                </figure>
+              </cv-animate>
+              <cv-animate fx="rise(soft)" duration="600" delay="300" target=".btn" stagger="90">
+                <div class="actions">
+                  <a class="btn btn-gold" href="https://cineview.pages.dev" target="_blank" rel="noopener"><span lang="zh-CN">官网</span><span lang="en">Website</span> <span aria-hidden="true">↗</span></a>
+                  <a class="btn btn-line" href="https://github.com/AlienMu/cineview" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
+                  <a class="btn btn-line" href="https://www.npmjs.com/package/cineview" target="_blank" rel="noopener">npm <span aria-hidden="true">↗</span></a>
+                </div>
+              </cv-animate>
+            </div>
+            <cv-animate class="cv-shots" fx="rise(soft)" on="enter(partial)" duration="700" delay="200" target=".shot" stagger="120">
+              <ul class="shot-grid">
+                <li class="shot shot-main">
+                  <a href="https://cineview.pages.dev" target="_blank" rel="noopener">
+                    <img src="media/shot-home.webp" width="960" height="600" loading="lazy" decoding="async" alt="" />
+                    <span class="shot-cap"><span lang="zh-CN">官网</span><span lang="en">Website</span> · cineview.pages.dev</span>
+                  </a>
+                </li>
+                <li class="shot">
+                  <a href="https://cineview.pages.dev/cases/moto/" target="_blank" rel="noopener">
+                    <img src="media/shot-moto.webp" width="960" height="600" loading="lazy" decoding="async" alt="" />
+                    <span class="shot-cap"><span lang="zh-CN">案例 · 街车发布页</span><span lang="en">Case · bike launch</span></span>
+                  </a>
+                </li>
+                <li class="shot">
+                  <a href="https://cineview.pages.dev/cases/wedding/" target="_blank" rel="noopener">
+                    <img src="media/shot-wedding.webp" width="960" height="600" loading="lazy" decoding="async" alt="" />
+                    <span class="shot-cap"><span lang="zh-CN">案例 · 婚礼邀请函</span><span lang="en">Case · wedding invite</span></span>
+                  </a>
+                </li>
+                <li class="shot">
+                  <a href="https://cineview.pages.dev/docs" target="_blank" rel="noopener">
+                    <img src="media/shot-docs.webp" width="960" height="600" loading="lazy" decoding="async" alt="" />
+                    <span class="shot-cap"><span lang="zh-CN">文档 · 附可操作的例子</span><span lang="en">Docs · with live examples</span></span>
+                  </a>
+                </li>
+              </ul>
+            </cv-animate>
+          </article>
+
+          <cv-animate class="others" fx="rise(soft)" on="enter(partial)" duration="600" target=".other" stagger="120">
+            <div class="other-list">
+              <article class="other">
+                <p class="other-tag mono"><span lang="zh-CN">开源</span><span lang="en">Open source</span></p>
+                <h3 class="other-name">Resume</h3>
+                <p class="other-desc"><span lang="zh-CN">一个海外招聘平台的前端，职位和简历都有，支持中英文。自带模拟数据，不用后端，克隆下来就能跑。</span><span lang="en">The frontend of an overseas hiring platform, with jobs and résumés in Chinese and English. It ships its own mock data, so it runs without a backend: clone it and go.</span></p>
+                <div class="other-foot">
+                  <p class="other-stack mono">Vue 3 · Vite · Ant Design Vue · Pinia · Vue I18n</p>
+                  <a class="other-link" href="https://github.com/AlienMu/resume" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
+                </div>
+              </article>
+              <article class="other">
+                <p class="other-tag mono"><span lang="zh-CN">还在做</span><span lang="en">Work in progress</span></p>
+                <h3 class="other-name">Mowen</h3>
+                <p class="other-desc"><span lang="zh-CN">一个 AI agent 运行时，重点是不编造：每一步都留记录、能重放，回答里的事实要先过校验才发出去。</span><span lang="en">An AI agent runtime focused on not making things up: every step is recorded and can be replayed, and facts in an answer pass a check before they go out.</span></p>
+                <div class="other-foot">
+                  <p class="other-stack mono">Python · FastAPI · PostgreSQL</p>
+                </div>
+              </article>
+            </div>
+          </cv-animate>
+        </section>
+      </cv-scene>
+
+      <!-- 05 关注 -->
+      <cv-scene id="follow" class="act act-follow">
+        <section class="follow" aria-labelledby="follow-title">
+          <div class="follow-inner">
+            <cv-animate fx="fade" duration="500"><p class="kicker mono"><span lang="zh-CN">关注</span><span lang="en">Follow</span></p></cv-animate>
+            <h2 class="follow-title" id="follow-title">
+              <span class="clip"><cv-animate fx="rise(line)" duration="900" delay="100"><span><span lang="zh-CN">聊代码，聊摩托，</span><span lang="en">Code or motorcycles,</span></span></cv-animate></span>
+              <span class="clip"><cv-animate fx="rise(line)" duration="900" delay="240"><span><span lang="zh-CN">都可以来<em>找我</em>。</span><span lang="en">come <em>say hi</em>.</span></span></cv-animate></span>
+            </h2>
+            <cv-animate class="links" fx="rise(soft)" duration="600" delay="420" target=".link" stagger="100">
+              <ul class="link-list">
+                <li class="link"><a href="https://github.com/AlienMu" target="_blank" rel="noopener"><span class="link-k mono">GitHub</span><span class="link-v">@AlienMu</span><span class="link-go" aria-hidden="true">↗</span></a></li>
+                <li class="link"><a href="https://x.com/AlienMu777" target="_blank" rel="noopener"><span class="link-k mono">X</span><span class="link-v">@AlienMu777</span><span class="link-go" aria-hidden="true">↗</span></a></li>
+                <li class="link"><a href="https://t.me/alienmu" target="_blank" rel="noopener"><span class="link-k mono">Telegram</span><span class="link-v">@alienmu</span><span class="link-go" aria-hidden="true">↗</span></a></li>
+                <li class="link"><a href="mailto:mu1hang@foxmail.com"><span class="link-k mono"><span lang="zh-CN">邮箱</span><span lang="en">Email</span></span><span class="link-v">mu1hang@foxmail.com</span><span class="link-go" aria-hidden="true">→</span></a></li>
+              </ul>
+            </cv-animate>
+          </div>
+          <footer class="foot mono">
+            <span>© 2026 Alien</span>
+            <span><span lang="zh-CN">用 CineView 2 搭的</span><span lang="en">Built with CineView 2</span></span>
+          </footer>
+        </section>
+      </cv-scene>
+    </cv-stage>
   </body>
 </html>

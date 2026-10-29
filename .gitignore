@@ -13,3 +13,7 @@ dist/
 
 # local env
 *.local
+
+# raw material (originals stay local; compressed copies live in public/media)
+/IMG_*.JPG
+/temp_video_*.mp4
